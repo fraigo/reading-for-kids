@@ -1,0 +1,150 @@
+<!-- text-template -->
+<script type="text/x-template" id="reader-component-template">
+    <div class="reader-component" :orientation="orientation">
+     <div class="reader-header">
+         <h1></h1>
+         <div>Page {{pageNum}}</div>
+     </div>
+     <transition-group name="fade" tag="div" class="reader-content">
+        <div class="reader-toolbar" key="toolbar">
+            <button @click="showAll()">Escuchar</button>
+        </div>
+        <div class="reader-text" key="pageNum">
+            <span v-for="(word,wordIdx) in words" :key="wordIdx" @click="showWord(wordIdx)" :active="wordIdx<=currentWord" :next="wordIdx==currentWord+1">{{word}} </span>
+        </div>
+        <div is="popup" :info="popup" key="popup.title" ref="popup"></div>
+        <div key="question" class="reader-question" v-if="currentWord==words.length-1 && page.question && status!=1">
+            <div class="reader-question-title">{{ page.question.title}}</div>
+            <div class="reader-question-answers">
+                <div class="reader-question-answer" v-for="(answer,answerIdx) in page.question.options" :key="answerIdx">
+                    <button @click="checkAnswer(answerIdx)">{{ answer.title }}</button>
+                </div>
+            </div>
+        </div>
+        <div key="step" class="reader-question" v-if="status==1 && page.question">
+            <div class="reader-question-title">Correcto!</div>
+            <div class="reader-question-answers">
+                <div class="reader-question-answer">
+                    <button @click="nextPage()" v-if="pageNum+1<book.pages.length">Next Page</button>
+                    <button @click="finish()" v-else >Finish</button>
+                </div>
+            </div>
+        </div>
+        <div key="step" class="reader-question" v-if="currentWord==words.length-1 && !page.question">
+            <div class="reader-question-answers">
+                <div class="reader-question-answer">
+                    <button @click="nextPage()" v-if="pageNum+1<book.pages.length">Next Page</button>
+                    <button @click="finish()" v-else >Finish</button>
+                </div>
+            </div>
+        </div>
+     </transition-group>
+    </div>
+</script>
+<script type="text/javascript">
+Vue.component('reader', {
+    template: '#reader-component-template',
+    data: function(){
+        return {
+            zoom : 1,
+            pageNum: 0,
+            status: 0,
+            currentWord: -1,
+            popup: null,
+            orientation: "portrait"
+        }
+    },
+    props: { 
+        book: Object
+    },
+    mounted:function(){
+        var self = this;
+    },
+    methods: {
+        showWord: function(idx){
+            if (idx<=this.currentWord+1) {
+                this.currentWord=idx
+            }
+        },
+        showAll: function(){
+            var self = this
+            self.currentWord=-1
+            self.status=0
+            var proc = setInterval(function(){
+                console.log('word', self.currentWord)
+                if (self.currentWord<=self.words.length-2) {
+                    self.currentWord++
+                    self.showWord(self.currentWord)
+                } else {
+                    clearInterval(proc)
+                }
+            }, 500)
+        },
+        checkAnswer: function(idx){
+            console.log('check',idx,this.page.question.answer)
+            if (idx == this.page.question.answer){
+                this.status = 1
+            } else {
+                this.currentWord = -1
+            }
+        },
+        nextPage: function(){
+            this.pageNum++
+            this.currentWord = -1
+            this.status = 0
+        },
+        finish: function() {
+            this.pageNum==-1
+            this.nextPage()
+        }
+    },
+    computed:{
+        page: function(){
+            return this.book.pages[this.pageNum]
+        },
+        words: function() {
+            return this.book.pages[this.pageNum].content.split(" ")
+        }
+    }
+});
+</script>
+<style>
+.reader-component{
+    font-size: 16px;
+    line-height: 1.5em;
+}
+.reader-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.reader-text{
+    font-size: 2rem;
+    color: rgb(80,80,80);
+    line-height: 1.5em;
+}
+.reader-content{
+    text-align: center;
+}
+.reader-text span[active="true"]{
+    color: rgb(240,240,240);
+    cursor: pointer;
+}
+.reader-text span[next="true"]{
+    color: rgb(128,128,128);
+    cursor: pointer;
+}
+.reader-toolbar button{
+    cursor: pointer;
+}
+.reader-question{
+    margin: 24px 0;
+}
+.reader-question-answer{
+    margin: 8px;
+}
+.reader-question-answer button{
+    cursor: pointer;
+}
+</style>
+    

@@ -1,0 +1,913 @@
+<!-- text-template -->
+<script type="text/x-template" id="app-content-template">
+    <div class="app-content" :style="sectionStyle()" >
+        <h1 v-if="position!=-3" :audio="section.audio!=null" :title="section.description"
+            @click="play(section.audio,null,translate(section.title))">
+            <span>{{translate(section.title)}}</span>
+        </h1>
+        <div v-show="section.image" class="section-image" :style="imageStyle(section)"></div>
+        <transition-group name="fade" tag="div" class="section-options">
+        <div class="option-container levels" :count="section.levels.length" :key="'levels'" v-if="currentLevel==0">
+            <div v-for="(level, idx) in section.levels" :audio="level.audio!=null" :key="level.label" 
+                class="option" :style="levelStyle(level)" @click="start(idx+1)" :title="level.description">
+                <div class="option-label">{{translate(level.label)}}</div>
+                <div v-if="level.icon" class="level-icon"><span class="material-icons">{{level.icon}}</span></div>
+                <div class="level-info" v-if="level.timer>0"><span class="material-icons">timer</span>{{level.timer}}s</div>
+                <div class="levelstars" v-if="levelStars(level,idx)>0" is="stars" :icon="level.icon" :stars="levelStars(level,idx)"></div>
+            </div>
+        </div>
+        <div v-for="(slide,idx) in currentSlides"  :key="slideKey(slide)" v-show="idx==position && !hide">
+            <div>
+                <h2 v-if="slide.title" :style="titleStyle" :audio="slide.audio!=null"  @click="play(slide.audio,null,translate(slide.title))">{{translate(slide.title)}}</h2>
+                <div v-if="slide.component" class="slide-component" :is="slide.component" @click="play(slide.audio,null,translate(slide.title))" :value="slide.props.value" :item="slide.props.item"></div>
+                <div v-show="slide.icon" class="slide-icon"><span class="material-icons">{{slide.icon}}</span></div>
+                <div v-show="slide.image" class="title-image" @click="play(slide.audio,null,translate(slide.title))":style="imageStyle(slide)"></div>
+                <div class="option-container" :count="slide.options.length">
+                    <div class="option" :result="option.result" :audio="option.audio!=null"  :key="idx1" @click.stop="verifyOption(slide,idx1)" v-for="(option,idx1) in slide.options" :style="optionStyle(option,idx1)">
+                        {{translate(option.label)}}
+                        <div v-if="option.icon" class="option-icon"><span class="material-icons">{{option.icon}}</span></div>
+                    </div>
+                </div>
+            </div>
+    </div>
+        </transition-group>
+        <div class="results" v-if="position==-1 && currentLevel>0">
+            <h2>{{translate('You win')}}!</h2>
+            <div class="results-content">
+                <div class="results-row">
+                    <div>{{translate('Corrects')}}<br><span class="correct">{{this.correct}}</span></div>
+                    <div>{{translate('Errors')}}<br><span class="error">{{this.errors}}</span></div>
+                </div>
+                <div class="stars" is="stars" :stars="stars" :size="40" :animated="true" :key="stars+40"></div>
+                <div class="result-buttons">
+                    <button @click="menu()"><span class="material-icons">close</span> {{translate('Close')}}</button>
+                    <button @click="restart()"><span class="material-icons">refresh</span> {{translate('Restart')}}</button>
+                    <button v-if="section.levels.length>currentLevel" @click="start(currentLevel+1)"><span class="material-icons">forward</span> {{translate(section.levels[currentLevel].label)}}</button>
+                </div>
+            </div>
+        </div>
+        <div class="status" v-if="position>=0"><span class="timer" :seconds="timerSeconds" v-if="this.timer">{{timerSeconds}}</span></div>
+    </div>
+</script>
+<script type="text/javascript">
+Vue.component('app-content', {
+    template: '#app-content-template',
+    data: function(){
+        return {
+            correct: 0,
+            errors: 0,
+            total: 0,
+            score: 0,
+            stars: 0,
+            currentSlides: [],
+            orders: [],
+            position: -2,
+            sorted: false,
+            timer: false,
+            currentLevel: 0,
+            timerLength: 5000,
+            timerSeconds: 0,
+            errorDetail: [],
+            menuTimeout: null,
+            levelData: {
+                levelStars: []
+            },
+            actions: {
+            },
+            audios: {}
+        }
+    },
+    props: { 
+        section: Object,
+        parent: Object,
+        user: Object,
+        baseurl: String,
+        lang: String,
+        language: Object
+    },
+    mounted:function(){
+        var self = this
+        if (!this.section.slides){
+            this.section.slides = []
+        }
+        this.total = this.section.slides.length
+        for (var index = 0; index < 10; index++) {
+            this.orders.push(Math.floor(Math.random() * 10))
+        }
+        var levelData = localStorage.getItem(this.storageId())
+        if (levelData && levelData != '') {
+            this.levelData = JSON.parse(levelData)
+        }
+        for (var index = 0; index < this.section.levels.length; index++) {
+            if (!this.levelData.levelStars[index]) {
+                this.levelData.levelStars[index]=0
+            }
+        }
+        var audios={}
+        this.loadAudio(this.translate("correct"))
+        this.loadAudio(this.getId(this.translate("try_again")))
+        this.loadAudio(this.getId(this.translate("you_win")))
+        this.loadAudio(this.translate("stars"))
+        this.loadAudio(this.translate("timeout"))
+        this.loadAudio("tick")
+        if (this.section.preloadAudio){
+            for(var key in this.section.preloadAudio){
+                this.loadAudio(this.section.preloadAudio[key])
+            }
+        }
+        this.loadAudio(this.section.audio)
+        this.loadAudio(this.wordExpression(this.translate(this.section.title)))
+        for(var key in this.section.levels){
+            this.loadAudio(this.section.levels[key].audio)
+            this.loadAudio(this.wordExpression(this.translate(this.section.levels[key].label)))
+        }
+        for(var key in this.section.slides){
+            this.loadAudio(this.section.slides[key].audio)
+            if (!this.section.slides[key].audio){
+                this.loadAudio(this.wordExpression(this.section.slides[key].title))
+            }
+            if (!this.section.slides[key].options) {
+                this.section.slides[key].options = JSON.parse(JSON.stringify(this.section.defaultOptions))
+            }
+            var options=this.section.slides[key].options
+            for(var key1 in options){
+                this.loadAudio(options[key1].audio)
+                this.loadAudio(this.wordExpression(options[key1].label))
+            }
+        }
+        audioEngine.loadList(this.audios, function(result) {
+            // console.log('result',result,self.audios)
+        }, function(id, error) {
+            console.warn(id,self.audios[id])
+            delete self.audios[id]
+        })
+        console.log(self.audios)
+        document.title = this.translate(this.section.title)
+    },
+    methods: {
+        storageId: function(id) {
+            if (!id) id = this.section.id
+            var data = ['leveldata', this.lang, id, this.user.id]
+            console.log(data)
+            return data.join('_')
+        },
+        getId: function(expr){
+            return this.language.id(expr)
+        },
+        translate: function(content) {
+            if (this.section.lang) {
+                content = this.language.expr(content, this.section.lang)
+                if (this.language.hasTranslation(content,this.section.lang)){
+                    return this.language.translate(content, this.section.lang)
+                }
+            }
+            if (this.parent && this.parent.lang){
+                content = this.language.expr(content, this.parent.lang)
+                if (this.language.hasTranslation(content,this.parent.lang)){
+                    return this.language.translate(content, this.parent.lang)
+                }
+            }
+            content = this.language.expr(content)
+            return this.language.translate(content)
+        },
+        loadAudio: function(audios) {
+            if (!audios) {
+                return
+            }
+            if (typeof audios == 'string' && audios.indexOf(' ')>0){
+                audios=this.wordExpression(audios)
+            }
+            if (typeof audios == 'string') {
+                if (audios.indexOf('/')>=0) {
+                    console.log('loadAudio', audios)
+                    this.audios[audios]=this.baseurl+audios
+                } else {
+                    var audio1=this.getId(audios)
+                    this.audios[audio1]="audio/"+this.language.selected+"/"+audio1+".wav"
+                }
+            } else {
+                for (var idx in audios){
+                    var audio1=this.getId(audios[idx])
+                    this.audios[audio1]="audio/"+this.language.selected+"/"+audio1+".wav"
+                }
+            }
+        },
+        save: function() {
+            localStorage.setItem(this.storageId(), JSON.stringify(this.levelData))
+        },
+        menu: function() {
+            clearInterval(this.timerProc)
+            clearInterval(this.menuTimeout)
+            this.currentLevel = 0
+            this.position = -1
+        },
+        toWords: function(expr){
+            if (expr == 'x'){
+                return [this.translate('times')]
+            }
+            if (typeof expr == 'number'){
+                expr = "" + expr
+            }
+            if (expr && expr.trim() != '' && !isNaN(expr.trim())){
+                var num = Number(expr)
+                var nums = {
+                    "es" : ["cero","uno","dos","tres","cuatro","cinco","seis","siete","ocho","nueve","diez",
+                "once","doce","trece","catorce","quince",null,null,null,null,"veinte"],
+                    "en" : ["zero","one","two","three","four","five","six","seven","eight","nine","ten",
+                "eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen","veinte"]
+                }
+                var decs = {
+                    "es" : ["","","veinte","treinta","cuarenta","cincuenta","sesenta","setenta","ochenta","noventa"],
+                    "en" : ["","","twenty","thirty","forty","fifty","sixty","senventy","eighty","ninety"]
+                }
+                var numText = nums[this.language.selected][num]
+                if (numText){
+                    return [numText]
+                }else{
+                    if (num>15 && num<20){
+                        return ["dieci"].concat(this.toWords(num-10))
+                    } else
+                    if (num%10==0){
+                        var deci = decs[this.language.selected][Math.floor(num/10)]
+                        if (deci){
+                            return [deci]
+                        }
+                    } else
+                    if (num<30){
+                        return ["veinti"].concat(this.toWords(num%10))
+                    } else
+                    if (num<100){
+                        return [decs[this.language.selected][Math.floor(num/10)],"y"].concat(this.toWords(num%10))
+                    }
+                }
+            }
+            return [expr]
+        },
+        wordExpression: function(expr, check){
+            if (!expr){
+                return []
+            }
+            if (typeof expr == 'number') {
+                expr = "" + expr
+            }
+            var parts = expr.split(" ")
+            var wordList = []
+            for (var index = 0; index < parts.length; index++) {
+                var words = this.toWords(parts[index].toLowerCase());
+                for (var idx1 = 0; idx1 < words.length; idx1++) {
+                    var word = this.getId(words[idx1])
+                    if (word!='' && (!check || this.audios[word])){
+                        wordList.push(this.translate(word))
+                    }
+                }
+            }
+            return wordList
+        },
+        playExpression: function(expr, include){
+            var audios = this.wordExpression(expr, true)
+            if (include) {
+                var includeExpr = this.wordExpression(include, true)
+                console.log('include', include, includeExpr)
+                audios = audios.concat(includeExpr)
+            }
+            this.play(audios)
+        },
+        play: function(audios,include,expr) {
+            console.log('play',audios)
+            if ((audios==null || audios.length==0) && expr){
+                this.playExpression(expr, include)
+                return
+            }
+            if ((audios==null || audios.length==0) && !expr){
+                return
+            }
+            this.$emit('status',JSON.stringify(audios).replace(/["\[\]]/g,'').replace(/,/g,' '))
+            if (!audios && !include) return;
+            if (include && !audios) {
+                audios = []
+            }
+            if (typeof audios == 'string') {
+                audios = [audios.toLowerCase()]
+            }
+            if (include) {
+                audios.push(include)
+            }
+            var time = 0
+            console.log('play', audios, include, expr)
+            for(var idx=0; idx< audios.length; idx++) {
+                var audio1 = this.getId(this.translate(audios[idx]))
+                setTimeout(function(audio){ 
+                    audioEngine.playFromStart(audio)
+                },time,audio1)
+                time+=audioEngine.duration(audio1)+10
+            }
+        },
+        restart: function() {
+            this.position = -3
+            clearInterval(this.timerProc)
+            setTimeout(function(self){
+                self.start(self.currentLevel)
+            },1000,this)
+        },
+        action: function (action, data) {
+            if (this.actions[action]){
+                this[action](data)
+            } else {
+                this.$emit('action', {action:action, data:data})
+            }
+        },
+        start: function (levelNum) {
+            var levelData = this.section.levels[levelNum-1]
+            this.play(levelData.audio,null,this.translate(levelData.label))
+            if (levelData.hash){
+                this.$emit('url',levelData.hash)
+                return
+            }
+            if (levelData.url){
+                this.$emit('url',levelData.url)
+                return
+            }
+            if (levelData.action){
+                this.action(levelData.action,levelData)
+                return
+            }
+            this.position = -1
+            this.sorted = levelData.sorted
+            this.timer = levelData.timer
+            this.currentLevel = levelNum
+            this.correct = 0
+            this.errors = 0
+            var tmpSlides = JSON.parse(JSON.stringify(this.section.slides))
+            if (!this.sorted) {
+                this.currentSlides = tmpSlides.sort(function(a,b){
+                    return Math.floor(Math.random()*2) -1;
+                })
+            } else {
+                this.currentSlides = tmpSlides
+            }
+            this.nextSlide()
+            this.$emit('state','started')
+        },
+        nextSlide: function () {
+            clearInterval(this.timerProc)
+            clearInterval(this.menuTimeout)
+            this.hide = false
+            if (this.position + 1 == this.currentSlides.length){
+                this.endSection()
+                this.position=-1
+                this.$emit('state','finish')
+                return
+            }
+            this.$emit('state','next')
+            this.position++
+            this.$forceUpdate()
+            if (this.timer){
+                this.timerSeconds=this.timer
+                this.timerProc=setInterval(function (self) {
+                    self.play("tick")
+                    self.timerSeconds--
+                    if (self.timerSeconds<=0){
+                        self.hide = true
+                        self.play(self.translate("timeout"))
+                        clearInterval(self.timerProc)
+                        setTimeout(function(){
+                            self.nextSlide()
+                        },1100)
+                    }
+                },1000, this)
+            }
+            this.$emit('status',(this.position+1) + " / " + this.total)
+        },
+        endSection: function () {
+            var points = (this.correct-this.errors)
+            this.score = points/this.total
+            console.log('score', points, this.score)
+            this.stars = 0
+            if (this.score == 1){
+                this.stars = 3
+            }
+            else if (this.score >0.6){
+                this.stars = 2
+            }
+            else if (this.score > 0.1){
+                this.stars = 1
+            }
+            if (!this.levelData.levelStars[this.currentLevel-1]){
+                this.levelData.levelStars[this.currentLevel-1]=0
+            }
+            this.levelData.levelStars[this.currentLevel-1] = Math.max(this.stars, this.levelData.levelStars[this.currentLevel-1])
+            this.save()
+            setTimeout(function(self){
+                if (self.stars>0){
+                    if (self.stars==3){
+                        self.play([self.translate("You win"),self.translate("three"),self.translate("stars")])
+                    } else if (self.stars==2){
+                        self.play([self.translate("You win"),self.translate("two"),self.translate("stars")])
+                    } else {
+                        self.play(self.translate("You win"))
+                    }
+                }
+            },1000, this)
+            this.menuTimeout=setTimeout(function(self){
+                self.menu()
+            },30000, this)
+        },
+        verifyOption: function(slide, idx){
+            var option = slide.options[idx]
+            var answer = slide.answer
+            var self = this
+            var currentOptions=this.currentSlides[this.position].options      
+            if (currentOptions[idx].result>0){
+                return
+            }
+            if  (slide.locked == true) {
+                return
+            }
+            var response = option.value ? option.value : option.label
+            console.log('response', response, answer)
+            if (response == answer) {
+                currentOptions[idx].result = 1
+                this.correct++
+                slide.locked = true
+                clearInterval(this.timerProc)
+                this.play(option.audio,this.translate("correct"),this.translate(option.label))
+                setTimeout(function () {
+                    self.nextSlide()
+                },1000)
+            } else {
+                this.errors++
+                currentOptions[idx].result = 2
+                this.play(option.audio,this.getId(this.translate("try_again")),this.translate(option.label))
+            }
+            this.$forceUpdate()
+        },
+        sectionStyle: function() {
+            return this.section.style?this.section.style:(this.parent&&this.parent.style)
+        },
+        levelStyle: function(level) {
+            var section = this.section
+            var parentStyle = (this.parent && this.parent.levelStyle) ? this.parent.levelStyle : {}
+            var baseStyle = section.levelStyle ? JSON.parse(JSON.stringify(section.levelStyle)) : JSON.parse(JSON.stringify(parentStyle))
+            var bg = section.levelCover ? section.levelCover : level.cover
+            if (bg) {
+                if (!bg.startsWith("http")){
+                    bg=this.baseurl+bg
+                }
+                baseStyle.backgroundImage = 'url("'+ bg  + '")'
+                if (!section.levelStyle || !section.levelStyle.backgroundSize) {
+                    baseStyle.backgroundSize = "cover"
+                }
+                if (!section.levelStyle || !section.levelStyle.backgroundRepeat) {
+                    baseStyle.backgroundRepeat = "no-repeat"
+                }
+                if (!section.levelStyle || !section.levelStyle.backgroundPosition) {
+                    baseStyle.backgroundPosition = "center 90%"
+                }
+            }
+            if (level.style) {
+                for (var key in level.style) {
+                    baseStyle[key] = level.style[key]
+                }
+            }
+            return baseStyle
+        },
+        optionStyle: function(option, idx) {
+            var parentStyle = (this.parent && this.parent.optionStyle) ? this.parent.optionStyle : {}
+            var baseStyle = this.section.optionStyle ? JSON.parse(JSON.stringify(this.section.optionStyle)) : parentStyle
+            baseStyle["order"]=this.orders[idx]
+            var bg = this.section.optionCover ? this.section.optionCover : option.cover
+            if (bg) {
+                if (!bg.startsWith("http")){
+                    bg=this.baseurl+bg
+                }
+                baseStyle.backgroundImage = 'url("'+ bg  + '")'
+                baseStyle.backgroundSize = "cover"
+                baseStyle.backgroundRepeat = "no-repeat"
+                baseStyle.backgroundPosition = "center bottom"
+            }
+            if (option.style) {
+                for (var key in option.style) {
+                    baseStyle[key] = option.style[key]
+                }
+            }
+            return baseStyle
+        },
+        titleStyle: function(){
+            return this.section.titleStyle
+        },
+        imageStyle: function(item){
+            var style = this.section.imageStyle ? JSON.parse(JSON.stringify(this.section.imageStyle)) : {}
+            var bg = item.image
+            if (bg){
+                if (!bg.startsWith("http")){
+                    bg=this.baseurl+bg
+                }
+                style.backgroundImage= 'url("'+ bg  + '")'
+                style.backgroundSize='contain'
+                style.backgroundRepeat='no-repeat'
+                style.backgroundPosition='center center'
+            }
+            return style
+        },
+        levelStars: function(level, idx){
+            if (level.hash){
+                var stars = localStorage.getItem(this.storageId(level.hash))
+                if (stars && stars!='') {
+                    var data = JSON.parse(stars)
+                    var count = 0
+                    var total = 0
+                    for(var idx in data.levelStars) {
+                        total += 3
+                        count += data.levelStars[idx]
+                    }
+                    if (total>0){
+                        return Math.max(1,Math.floor(count*3/total))
+                    }
+                }
+            }
+            return this.levelData.levelStars[idx]
+        },
+        slideKey: function(slide) {
+            return slide.title || slide.image || slide.component + JSON.stringify(slide.props)
+        },
+        slideOptions: function (position) {
+            if (!this.currentSlides[position]) {
+                return []
+            }
+            return this.currentSlides[position].options ? this.currentSlides[position].options : this.section.defaultOptions
+        }
+    },
+    computed:{
+        
+    },
+    watch:{
+        user: function (newUser) {
+            console.log('new', newUser)
+        },
+        section: function (newValue) {
+            console.log('section', newValue.title)
+        },
+        parent: function (newValue) {
+            this.$forceUpdate()
+        }
+    }
+
+});
+</script>
+<style>
+body{
+    font-size: 20px;
+}
+*[audio='true']{
+    position: relative;
+}
+*[audio='true']:before{
+    content:" ";
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    background-image: url('img/audio.svg');
+    background-size: contain;
+    right: 4px;
+    top: 4px;
+}
+.app-content{
+    text-align: center;
+}
+.app-content h1{
+    font-size: 2.5em;
+    margin: 0.2em auto;
+    display: inline-block;
+}
+.app-content h1[audio='true']{
+    padding-right: 30px;
+}
+.app-content h2{
+    -webkit-transform: scale(2);
+    transform: scale(2);
+    display: inline-block;
+    background-color: #44C;
+    color: #fff;
+    padding: 8px;
+    line-height: 1em;
+    border-radius: 8px;
+    margin: 6vh auto;
+    white-space: pre-wrap;
+}
+.app-content h2[audio='true']{
+    padding-right: 30px;
+}
+.section-options{
+    width: 100%;
+}
+.option-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.option-container .option{
+    position: relative;
+    min-width: 105px;
+    min-height: 105px;
+    width: 13vw;
+    height: 13vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #bbb;
+    margin: 1vw;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 2em;
+    padding: 0 8px;
+    max-width: 200px;
+    max-height: 200px;
+    transition: transform linear .3s;
+    transform: scale(1.0);
+}
+.option-container .option[result='1']{
+    border: 4px solid green;
+    color: green;
+    background-color: #dfd;
+    transform: scale(1.2);
+    z-index: 1;
+}
+.option-container .option[result='2']{
+    border: 4px solid red;
+    color: red;
+    background-color: #fdd;
+    transform: scale(0.9);
+    z-index: 1;    
+}
+.option-container[count='4']{
+    width: 80vw;
+    margin: 12px auto;
+}
+.option-container[count='4'] .option{
+    width: 30vw;
+    height: 30vw;
+}
+.option-container[count='5'], .option-container[count='6']{
+    width: 90vw;
+    margin: 12px auto;
+}
+.option-container[count='5'] .option, .option-container[count='6'] .option{
+    width: 26vw;
+    height: 26vw;
+}
+.option-container[count='7'], .option-container[count='8']{
+    max-width: 98vw;
+    margin: 12px auto;
+}
+.option-container[count='7'] .option,
+.option-container[count='8'] .option{
+    width: 20vw;
+    height: 20vw;
+}
+.option-container[count='9']{
+    width: 75vw;
+    max-width: 700px;
+    min-width: 360px;
+    margin: 12px auto;
+}
+.option-container[count='9'] .option{
+    width: 20vw;
+    height: 20vw;
+}
+.option-container[count='10']{
+    width: 100vw;
+}
+.option-container[count='10'] .option{
+    width: 19vw;
+    height: 19vw;
+}
+.option .option-label{
+    flex: 1;
+    line-height: 1em;
+}
+.results{
+    font-size: 1.2em;
+}
+.results-content{
+    background-color: rgb(255,255,255);
+    color: #222;
+    padding: 12px;
+    max-width: 90%;
+    margin: 0 auto;
+    border-radius: 7px;
+    border: 1px solid #eee;
+}
+.results-row{
+    display: flex;
+    justify-content: center;
+}
+.results-row > div{
+    margin: 8px;
+}
+.stars{
+    font-size: 3rem;
+}
+.levels{
+    position: relative;
+}
+.levels .option{
+    font-size: 1.5em;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 25vw;
+    height: 25vw;
+}
+.levels .option > div:first-child{
+    padding-top: 8%;
+}
+.levelstars star{
+    font-size: 1rem;
+}
+.level-info{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.title-image{
+    height:25vh;
+}
+.error{
+    color: #C00;
+}
+.correct{
+    color: #080;
+}
+.timer{
+    display: inline-block;
+    width: 2em;
+    height: 2em;
+    line-height: 2em;
+    font-size: 2em;
+    border: 2px solid #44C;
+    background-color: #eee;
+    color: #44C;
+    border-radius: 99% 99%;
+    text-align:center;
+}
+.timer[seconds='2'] {
+    color: #C60;
+    border: 2px solid #C60;
+}
+.timer[seconds='1'] {
+    color: #C00;
+    border: 2px solid #C00;
+}
+.status{
+    text-align: right;
+    padding: 8px;
+    box-sizing: border-box;
+    position:absolute;
+    bottom: 36px;
+    left:0;
+    width:100%;
+    z-index: 2;
+}
+.levelstars .star-icon{
+    width: 30%;    
+}
+.levelstars[icon] .star-icon{
+    width: 22px;    
+}
+
+.level-icon, .slide-icon, .option-icon{
+    font-size: 3em;
+    display: block;
+    height: 1em;
+    text-align: center;
+    margin: 8px 0;
+}
+.option-icon .material-icons{
+    display: block;
+}
+.stars{
+    height: 60px;
+    margin-bottom: 20px;
+}
+.stars .star-icon{
+    width: 80px;   
+}
+@media (max-width: 1023px) {
+    body{
+        font-size: 18px;
+    }
+    .levels .option{
+        font-size: 1.2em;
+    }
+    .stars .star-icon{
+        width: 60px;   
+    }
+}
+@media (max-width: 767px) {
+    body{
+        font-size: 16px;
+    }
+    .app-content h1{
+        font-size: 2em;
+    }
+    .app-content h2{
+        -webkit-transform: scale(1.5);
+        transform: scale(1.5);
+    }
+    .levels .option{
+        font-size: 1rem;
+    }
+    .level-icon, .slide-icon, .option-icon{
+        font-size: 2.25em;
+        margin: 2% auto 8% auto;
+    }
+    .level-icon + .levelstars{
+        margin-top: -6%;
+    }
+}
+@media (max-width: 459px) {
+    .app-content h1, .app-content h2{
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+    .levelstars .star-icon{
+        width: 22px;   
+    }
+    .levels{
+        max-width: 380px;
+        margin: 0 auto;
+    }
+    .title-image{
+        height: 22vh;
+    }
+    .option-container[count='9'] .option{
+        width: 17vw;
+        height: 17vw;
+    }
+    .level-icon, .slide-icon, .option-icon{
+        font-size: 1.5em;
+    }
+    .levels .option .levelstars{
+        bottom: 4px;
+    }
+}
+@media (max-width: 375px) {
+    .app-content{
+        padding-left: 4px !important;
+        padding-right: 4px !important;
+    }
+    .app-content h1, .app-content h2{
+        font-size: 1.8rem;
+    }
+    .levels .option, .option-container .option{
+        margin: 1vh 1px;
+        font-size: 0.9rem;
+    }
+    .option-container{
+        max-width: 100% !important;
+        margin: 2vh auto !important;
+    }
+    .option-container[count='6'], .option-container[count='9'], .option-container[count='10']{
+        width: 99vw;
+    }
+    .option-container .option{
+        position: relative;
+        min-width: 95px;
+        min-height: 95px;
+    }
+
+}
+@media (max-height: 400px){
+    .app-content h1, .app-content h2{
+        font-size: 1.25rem;
+        margin: 8px auto;
+    }
+    .option-container{
+        width: 99vw;
+        margin: 0 auto;
+    }
+    .option-container[count] .option{
+        margin: 2px;
+        min-width: 100px !important;
+        min-height: 100px !important;
+        width: 100px;
+        height: 100px;
+        font-size: 0.9em;
+    }
+    .option-container[count='3'],.option-container[count='6'], .option-container[count='9'], .option-container[count='10']{
+        max-width: 390px;
+    }
+    .option-container[count='4'],.option-container[count='8']{
+        max-width: 490px;
+    }
+    .level-icon, .slide-icon, .option-icon{
+        font-size: 1.2em;
+    }
+    .option-container[count='9'] .option, .option-container[count='10'] .option{
+        width: 18vw;
+        height: 18vw;
+    }
+}
+@media (max-height: 400px) and (max-wi: 400px){
+}
+</style>
