@@ -45,6 +45,7 @@
     </div>
 </script>
 <script type="text/javascript">
+
 Vue.component('reader', {
     template: '#reader-component-template',
     data: function(){
@@ -61,7 +62,8 @@ Vue.component('reader', {
         book: Object
     },
     mounted:function(){
-        var self = this;
+        var self = this
+        this.loadWords()
     },
     methods: {
         showWord: function(idx){
@@ -95,10 +97,40 @@ Vue.component('reader', {
             this.pageNum++
             this.currentWord = -1
             this.status = 0
+            this.loadWords()
         },
         finish: function() {
             this.pageNum=-1
             this.nextPage()
+        },
+        audioId: function(id){
+            id = id.toLowerCase()
+            id = id.replaceAll('à','a')
+            id = id.replaceAll('é','e')
+            id = id.replaceAll('í','i')
+            id = id.replaceAll('ó','o')
+            id = id.replaceAll('ú','u')
+            return id
+        },
+        loadWords: function() {
+            if (!this.book){
+                return
+            }
+            var audios = this.words
+            for(var idx=0; idx< audios.length; idx++) {
+                var audio1 = this.audioId(audios[idx])
+                audioEngine.load("/audio/"+this.book.lang+"/"+audio1+".wav", audio1)
+            }
+        },
+        readWords: function () {
+            var audios = this.words
+            for(var idx=0; idx< audios.length; idx++) {
+                var audio1 = this.audioId(audios[idx])
+                setTimeout(function(audio){ 
+                    audioEngine.playFromStart(audio)
+                },time,audio1)
+                time+=audioEngine.duration(audio1)+10
+            }
         }
     },
     computed:{
