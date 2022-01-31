@@ -3,9 +3,12 @@
     <div class="reader-component" :orientation="orientation">
      <div class="reader-header">
          <h1></h1>
-         <div>Page {{pageNum}}</div>
+         <div>Page {{pageNum+1}}</div>
      </div>
      <transition-group name="fade" tag="div" class="reader-content">
+         <div key="image">
+             <img :src="page.image" width="90%">
+         </div>
         <div class="reader-toolbar" key="toolbar">
             <button @click="showAll()">Escuchar</button>
         </div>
@@ -94,7 +97,7 @@ Vue.component('reader', {
             this.status = 0
         },
         finish: function() {
-            this.pageNum==-1
+            this.pageNum=-1
             this.nextPage()
         }
     },
