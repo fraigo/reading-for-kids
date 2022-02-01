@@ -3,7 +3,7 @@
     "lang" : "es",
     "pages" : [
         {
-            "content" : "Había una vez tres cerditos",
+            "content" : "Había una vez tres cerditos.",
             "image" : "img/three-little-pigs/001.png",
             "question" : {
                 "title" : "Quienes son los personajes?",
@@ -22,10 +22,10 @@
             }
         },
         {
-            "content" : "Un cerdito hizo una casa de paja",
+            "content" : "Un cerdito hizo una casa de paja.",
             "image" : "img/three-little-pigs/002.png",
             "question" : {
-                "title" : "De que material contruyó su casa?",
+                "title" : "De que material construyó su casa?",
                 "answer" : "b",
                 "options" : {
                     "a" : {
@@ -44,7 +44,7 @@
             "content" : "El otro cerdito hizo una casa de troncos.",
             "image" : "img/three-little-pigs/003.png",
             "question" : {
-                "title" : "De que material contruyó su casa?",
+                "title" : "De que material construyó su casa?",
                 "answer" : "a",
                 "options" : {
                     "a" : {
@@ -60,10 +60,10 @@
             }
         },
         {
-            "content" : "Y el ultimo cerdito hizo una casa de ladrillos",
+            "content" : "Y el último cerdito hizo una casa de ladrillos.",
             "image" : "img/three-little-pigs/004.png",
             "question" : {
-                "title" : "De que material contruyó su casa?",
+                "title" : "De que material construyó su casa?",
                 "answer" : "c",
                 "options" : {
                     "a" : {

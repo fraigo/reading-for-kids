@@ -3,28 +3,28 @@
     <div class="reader-component" :orientation="orientation">
      <div class="reader-header">
          <h1></h1>
-         <div>Page {{pageNum+1}}</div>
+         <div @click="nextPage()" >Page {{pageNum+1}}</div>
      </div>
      <transition-group name="fade" tag="div" class="reader-content">
          <div key="image">
              <img :src="page.image" width="90%">
          </div>
         <div class="reader-toolbar" key="toolbar">
-            <button @click="showAll()">Escuchar</button>
+            <button @click="readWords(words, true)">Escuchar</button>
         </div>
         <div class="reader-text" key="pageNum">
             <span v-for="(word,wordIdx) in words" :key="wordIdx" @click="showWord(wordIdx)" :active="wordIdx<=currentWord" :next="wordIdx==currentWord+1">{{word}} </span>
         </div>
         <div is="popup" :info="popup" key="popup.title" ref="popup"></div>
-        <div key="question" class="reader-question" v-if="currentWord==words.length-1 && page.question && status!=1">
-            <div class="reader-question-title">{{ page.question.title}}</div>
+        <div key="question" class="reader-question" v-if="status==1 && page.question">
+            <div class="reader-question-title" @click="readWords(page.question.title.split(' '))" >{{ page.question.title}}</div>
             <div class="reader-question-answers">
                 <div class="reader-question-answer" v-for="(answer,answerIdx) in page.question.options" :key="answerIdx">
-                    <button @click="checkAnswer(answerIdx)">{{ answer.title }}</button>
+                    <button @click="checkAnswer(answerIdx)" >{{ answer.title }}</button>
                 </div>
             </div>
         </div>
-        <div key="step" class="reader-question" v-if="status==1 && page.question">
+        <div key="step" class="reader-question" v-if="status==2 && page.question">
             <div class="reader-question-title">Correcto!</div>
             <div class="reader-question-answers">
                 <div class="reader-question-answer">
@@ -33,7 +33,7 @@
                 </div>
             </div>
         </div>
-        <div key="step" class="reader-question" v-if="currentWord==words.length-1 && !page.question">
+        <div key="step" class="reader-question" v-if="status==2 && !page.question">
             <div class="reader-question-answers">
                 <div class="reader-question-answer">
                     <button @click="nextPage()" v-if="pageNum+1<book.pages.length">Next Page</button>
@@ -67,8 +67,30 @@ Vue.component('reader', {
     },
     methods: {
         showWord: function(idx){
+            var self = this
             if (idx<=this.currentWord+1) {
                 this.currentWord=idx
+                this.playAudio(this.words[idx])
+                var finish = this.currentWord==this.words.length-1
+                if (finish) {
+                    setTimeout(function(){
+                        self.status = 1
+                        self.$forceUpdate()
+                        self.readWords(self.page.question.title.split(' '))
+                    }, 1500)
+                } else {
+                    this.status = 0
+                }
+            }
+        },
+        playAudio: function(word, callback) {
+            var audio1 = this.audioId(word)
+            audioEngine.playFromStart(audio1)
+            if (callback){
+                var time=audioEngine.duration(audio1)
+                setTimeout(function(){
+                    callback()
+                }, time)
             }
         },
         showAll: function(){
@@ -86,12 +108,16 @@ Vue.component('reader', {
             }, 500)
         },
         checkAnswer: function(idx){
-            console.log('check',idx,this.page.question.answer)
+            var words = this.page.question.options[idx].title.split(" ")
+            console.log('check',idx,this.page.question.answer,words)
             if (idx == this.page.question.answer){
-                this.status = 1
+                this.status = 2
+                words.push('correcto')
             } else {
                 this.currentWord = -1
+                words.push('intenta_otra_vez')
             }
+            this.readWords(words)
         },
         nextPage: function(){
             this.pageNum++
@@ -110,6 +136,9 @@ Vue.component('reader', {
             id = id.replaceAll('í','i')
             id = id.replaceAll('ó','o')
             id = id.replaceAll('ú','u')
+            id = id.replaceAll('?','')
+            id = id.replaceAll(',','')
+            id = id.replaceAll('.','')
             return id
         },
         loadWords: function() {
@@ -117,20 +146,39 @@ Vue.component('reader', {
                 return
             }
             var audios = this.words
+            audios = audios.concat(this.page.question.title.split(' '))
+            for (var idx in this.page.question.options){
+                var answer = this.page.question.options[idx]
+                audios = audios.concat(answer.title.split(' '))
+            }
+            audios.push("correcto")
+            audios.push("intenta_otra_vez")
             for(var idx=0; idx< audios.length; idx++) {
                 var audio1 = this.audioId(audios[idx])
-                audioEngine.load("/audio/"+this.book.lang+"/"+audio1+".wav", audio1)
+                var base = document.location.pathname.replace("index.html","")
+                audioEngine.load(base+"audio/"+this.book.lang+"/"+audio1+".wav", audio1)
             }
         },
-        readWords: function () {
-            var audios = this.words
-            for(var idx=0; idx< audios.length; idx++) {
-                var audio1 = this.audioId(audios[idx])
-                setTimeout(function(audio){ 
-                    audioEngine.playFromStart(audio)
-                },time,audio1)
-                time+=audioEngine.duration(audio1)+10
+        readWords: function (list, showWord, callback) {
+            var time = 50
+            var self = this
+            for(var idx=0; idx< list.length; idx++) {
+                var audio1 = this.audioId(list[idx])
+                console.log('play', audio1)
+                setTimeout(function(audio,idx){ 
+                    if (showWord) {
+                        self.showWord(idx)
+                    } else {
+                        self.playAudio(audio)
+                    }
+                },time,audio1,idx)
+                time+=audioEngine.duration(audio1)-200
             }
+            setTimeout(function(){ 
+                if (callback) {
+                    callback()
+                }
+            }, time)
         }
     },
     computed:{
