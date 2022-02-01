@@ -7,18 +7,18 @@
             "image" : "img/three-little-pigs/001.png",
             "question" : {
                 "title" : "Quienes son los personajes?",
-                "answer" : "a",
-                "options" : {
-                    "a" : {
+                "answer" : 0,
+                "options" : [
+                    {
                         "title": "Tres cerditos"
                     },
-                    "b" : {
+                    {
                         "title": "Tres osos"
                     },
-                    "c" : {
+                    {
                         "title": "Tres lobos"
                     }
-                }
+                ]
             }
         },
         {
@@ -26,18 +26,18 @@
             "image" : "img/three-little-pigs/002.png",
             "question" : {
                 "title" : "De que material construyó su casa?",
-                "answer" : "b",
-                "options" : {
-                    "a" : {
+                "answer" : 1,
+                "options" : [
+                    {
                         "title": "Troncos"
                     },
-                    "b" : {
+                    {
                         "title": "Paja"
                     },
-                    "c" : {
+                    {
                         "title": "Ladrillos"
                     }
-                }
+                ]
             }
         },
         {
@@ -45,37 +45,37 @@
             "image" : "img/three-little-pigs/003.png",
             "question" : {
                 "title" : "De que material construyó su casa?",
-                "answer" : "a",
-                "options" : {
-                    "a" : {
+                "answer" : 0,
+                "options" : [
+                    {
                         "title": "Troncos"
                     },
-                    "b" : {
+                    {
                         "title": "Paja"
                     },
-                    "c" : {
+                    {
                         "title": "Ladrillos"
                     }
-                }
+                ]
             }
         },
         {
-            "content" : "Y el último cerdito hizo una casa de ladrillos.",
+            "content" : "El último cerdito hizo una casa de ladrillos.",
             "image" : "img/three-little-pigs/004.png",
             "question" : {
                 "title" : "De que material construyó su casa?",
-                "answer" : "c",
-                "options" : {
-                    "a" : {
+                "answer" : 2,
+                "options" : [
+                    {
                         "title": "Troncos"
                     },
-                    "b" : {
+                    {
                         "title": "Paja"
                     },
-                    "c" : {
+                    {
                         "title": "Ladrillos"
                     }
-                }
+                ]
             }
         }
     ]

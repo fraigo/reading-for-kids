@@ -6,36 +6,34 @@
          <div @click="nextPage()" >Page {{pageNum+1}}</div>
      </div>
      <transition-group name="fade" tag="div" class="reader-content">
-         <div key="image">
+         <div key="left" class="reader-left">
              <img :src="page.image" width="90%">
          </div>
-        <div class="reader-toolbar" key="toolbar">
-            <button @click="readWords(words, true)">Escuchar</button>
-        </div>
-        <div class="reader-text" key="pageNum">
-            <span v-for="(word,wordIdx) in words" :key="wordIdx" @click="showWord(wordIdx)" :active="wordIdx<=currentWord" :next="wordIdx==currentWord+1">{{word}} </span>
-        </div>
-        <div is="popup" :info="popup" key="popup.title" ref="popup"></div>
-        <div key="question" class="reader-question" v-if="status==1 && page.question">
-            <div class="reader-question-title" @click="readWords(page.question.title.split(' '))" >{{ page.question.title}}</div>
-            <div class="reader-question-answers">
-                <div class="reader-question-answer" v-for="(answer,answerIdx) in page.question.options" :key="answerIdx">
-                    <button @click="checkAnswer(answerIdx)" >{{ answer.title }}</button>
+        <div class="reader-right" key="right">
+            <div class="reader-toolbar" key="toolbar" >
+                <button @click="readWords(words, true)">
+                    <img src="img/audio.svg" height="32" >
+                </button>
+            </div>
+            <div class="reader-text" key="pageNum">
+                <span v-for="(word,wordIdx) in words" :key="wordIdx" @click="showWord(wordIdx)" :active="wordIdx<=currentWord" :next="wordIdx==currentWord+1">{{word}} </span>
+            </div>
+            <div key="question" class="reader-question" v-if="status==1 && page.question">
+                <div class="reader-question-title" @click="readWords(page.question.title.split(' '))" >{{ page.question.title}}</div>
+                <div class="reader-question-answers">
+                    <div class="reader-question-answer" @click="currentAnswer=answerIdx" :current="answerIdx==currentAnswer" v-for="(answer,answerIdx) in page.question.options" 
+                        :display="answerIdx<=visibleAnswer" :va="visibleAnswer" :idx="answerIdx" :key="answerIdx">
+                        <button @click="checkAnswer(answerIdx)" >{{ answer.title }}</button>
+                        <img src="img/audio.svg" height="32" @click="listenOption(answerIdx,answer)" align="absmiddle">
+                    </div>
                 </div>
             </div>
         </div>
+        <div is="popup" :info="popup" key="popup.title" ref="popup"></div>
         <div key="step" class="reader-question" v-if="status==2 && page.question">
             <div class="reader-question-title">Correcto!</div>
             <div class="reader-question-answers">
-                <div class="reader-question-answer">
-                    <button @click="nextPage()" v-if="pageNum+1<book.pages.length">Next Page</button>
-                    <button @click="finish()" v-else >Finish</button>
-                </div>
-            </div>
-        </div>
-        <div key="step" class="reader-question" v-if="status==2 && !page.question">
-            <div class="reader-question-answers">
-                <div class="reader-question-answer">
+                <div class="reader-question-answer" display="true">
                     <button @click="nextPage()" v-if="pageNum+1<book.pages.length">Next Page</button>
                     <button @click="finish()" v-else >Finish</button>
                 </div>
@@ -54,6 +52,9 @@ Vue.component('reader', {
             pageNum: 0,
             status: 0,
             currentWord: -1,
+            currentAnswer: -1,
+            visibleAnswer: -1,
+            playProc: null,
             popup: null,
             orientation: "portrait"
         }
@@ -66,6 +67,24 @@ Vue.component('reader', {
         this.loadWords()
     },
     methods: {
+        showOption: function(idx) {
+            var self = this
+            var opt = self.page.question.options[idx]
+            console.log('show',idx,opt.title)
+            self.visibleAnswer = idx
+            self.readWords(opt.title.split(' '), false, function(){
+                if (idx+1 < self.page.question.options.length){
+                    self.showOption(idx+1)
+                }
+            })
+        },
+        listenOption: function(idx){
+            var self = this
+            var opt = self.page.question.options[idx]
+            self.readWords(opt.title.split(' '), false, function(){
+                self.currentAnswer = -1
+            })
+        },
         showWord: function(idx){
             var self = this
             if (idx<=this.currentWord+1) {
@@ -75,8 +94,11 @@ Vue.component('reader', {
                 if (finish) {
                     setTimeout(function(){
                         self.status = 1
+                        self.visibleAnswer = -1
                         self.$forceUpdate()
-                        self.readWords(self.page.question.title.split(' '))
+                        self.readWords(self.page.question.title.split(' '), false, function(){
+                            self.showOption(0)
+                        })
                     }, 1500)
                 } else {
                     this.status = 0
@@ -84,6 +106,7 @@ Vue.component('reader', {
             }
         },
         playAudio: function(word, callback) {
+            console.log('playing',word)
             var audio1 = this.audioId(word)
             audioEngine.playFromStart(audio1)
             if (callback){
@@ -95,7 +118,9 @@ Vue.component('reader', {
         },
         showAll: function(){
             var self = this
+            clearTimeout(self.playProc)
             self.currentWord=-1
+            self.currentAnswer=-1
             self.status=0
             var proc = setInterval(function(){
                 console.log('word', self.currentWord)
@@ -108,22 +133,37 @@ Vue.component('reader', {
             }, 500)
         },
         checkAnswer: function(idx){
+            var self = this
             var words = this.page.question.options[idx].title.split(" ")
             console.log('check',idx,this.page.question.answer,words)
             if (idx == this.page.question.answer){
-                this.status = 2
                 words.push('correcto')
+                this.readWords(words, false, function(){
+                    if (self.pageNum==self.book.pages.length-1){
+                        self.finish()
+                    } else {
+                        self.nextPage()
+                    }
+                })
             } else {
-                this.currentWord = -1
                 words.push('intenta_otra_vez')
+                this.readWords(words, false, function(){
+                    self.currentWord = -1
+                    self.status=0
+                })
             }
-            this.readWords(words)
         },
         nextPage: function(){
+            var self = this
+            clearTimeout(self.playProc)
             this.pageNum++
             this.currentWord = -1
+            this.currentAnswer = -1
             this.status = 0
             this.loadWords()
+            this.playProc = setTimeout(function(){
+                self.showAll()
+            },2000)
         },
         finish: function() {
             this.pageNum=-1
@@ -178,14 +218,21 @@ Vue.component('reader', {
                 if (callback) {
                     callback()
                 }
-            }, time)
+            }, time+200)
         }
     },
     computed:{
         page: function(){
+            if (this.pageNum<0) {
+                return {}
+            }
             return this.book.pages[this.pageNum]
         },
         words: function() {
+            console.log('words', this.pageNum)
+            if (this.pageNum<0) {
+                return []
+            }
             return this.book.pages[this.pageNum].content.split(" ")
         }
     }
@@ -208,26 +255,68 @@ Vue.component('reader', {
 }
 .reader-content{
     text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+}
+.reader-content img{
+    max-width: 66vw;
+    max-height: 80vh;
 }
 .reader-text span[active="true"]{
-    color: rgb(240,240,240);
+    color: rgb(255,255,128);
     cursor: pointer;
 }
 .reader-text span[next="true"]{
     color: rgb(128,128,128);
     cursor: pointer;
 }
+.reader-left{
+    flex: 0 0 45%;
+    box-sizing: border-box;
+}
+.reader-right{
+    flex: 0 0 55%;
+    box-sizing: border-box;
+}
 .reader-toolbar button{
     cursor: pointer;
 }
 .reader-question{
-    margin: 24px 0;
+    margin: 24px auto;
+    max-width: 300px;
+    width: 100%;
+    border: 1px solid #eee;
+    border-radius: 7px;
 }
 .reader-question-answer{
-    margin: 8px;
+    padding: 8px;
+    visibility: hidden;
+}
+.reader-question-answer[display='true']{
+    visibility: visible;
+}
+.reader-question-answer[current='true']{
+    background-color: rgba(255,255,255,0.2);
 }
 .reader-question-answer button{
     cursor: pointer;
+    width: 75%;
 }
+.reader-question-answer[current='true'] button{
+    color: #ff8;
+}
+
+@media (max-width: 767px){
+    .reader-left{
+        flex: 1 0 100%;
+        box-sizing: border-box;
+    }
+    .reader-right{
+        flex: 1 0 100%;
+        box-sizing: border-box;
+    }
+
+}
+
 </style>
     
