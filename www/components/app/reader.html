@@ -185,14 +185,14 @@ Vue.component('reader', {
             if (!this.book){
                 return
             }
-            var audios = this.words
-            audios = audios.concat(this.page.question.title.split(' '))
-            for (var idx in this.page.question.options){
-                var answer = this.page.question.options[idx]
-                audios = audios.concat(answer.title.split(' '))
+            var audios = this.words.concat(['correcto','intenta_otra_vez'])
+            if (this.page.question){
+                audios = audios.concat(this.page.question.title.split(' '))
+                for (var idx in this.page.question.options){
+                    var answer = this.page.question.options[idx]
+                    audios = audios.concat(answer.title.split(' '))
+                }
             }
-            audios.push("correcto")
-            audios.push("intenta_otra_vez")
             for(var idx=0; idx< audios.length; idx++) {
                 var audio1 = this.audioId(audios[idx])
                 var base = document.location.pathname.replace("index.html","")
@@ -229,7 +229,7 @@ Vue.component('reader', {
             return this.book.pages[this.pageNum]
         },
         words: function() {
-            console.log('words', this.pageNum)
+            console.log('words', this.pageNum,this.book.pages[this.pageNum].content)
             if (this.pageNum<0) {
                 return []
             }

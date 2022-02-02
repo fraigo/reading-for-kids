@@ -77,6 +77,49 @@
                     }
                 ]
             }
+        },
+        {
+            "content" : "Un lobo caminó hasta llegar a la casa de paja",
+            "image" : "img/three-little-pigs/005.png",
+            "question" : {
+                "title" : "A qué casa llegó el lobo?",
+                "answer" : 0,
+                "options" : [
+                    {
+                        "title": "La casa de paja"
+                    },
+                    {
+                        "title": "La casa de troncos"
+                    },
+                    {
+                        "title": "La casa de ladrillos"
+                    }
+                ]
+            }
+        },
+        {
+            "content" : "El lobo dijo déjame entrar",
+            "image" : "img/three-little-pigs/006.png"
+        },
+        {
+            "content" : "El cerdito dijo no te dejaré entrar",
+            "image" : "img/three-little-pigs/006.png"
+        },
+        {  
+            "content" : "Soplaré y soplaré, y tu casa derrumbaré",
+            "image" : "img/three-little-pigs/007.png",
+            "question" : {
+                "title" : "Pudo derribar la casa?",
+                "answer" : 0,
+                "options" : [
+                    {
+                        "title": "Si"
+                    },
+                    {
+                        "title": "No"
+                    }
+                ]
+            }
         }
     ]
 }
