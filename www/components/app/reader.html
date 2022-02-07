@@ -28,17 +28,17 @@
                     </div>
                 </div>
             </div>
+            <div key="step" class="reader-question" v-if="status==2 && !page.question">
+                <div class="reader-question-answers">
+                    <div class="reader-question-answer" display="true">
+                        <button @click="nextPage()" v-if="pageNum+1<book.pages.length">Next Page</button>
+                        <button @click="finish()" v-else >Finish</button>
+                    </div>
+                </div>
+            </div>            
         </div>
         <div is="popup" :info="popup" key="popup.title" ref="popup"></div>
-        <div key="step" class="reader-question" v-if="status==2 && page.question">
-            <div class="reader-question-title">Correcto!</div>
-            <div class="reader-question-answers">
-                <div class="reader-question-answer" display="true">
-                    <button @click="nextPage()" v-if="pageNum+1<book.pages.length">Next Page</button>
-                    <button @click="finish()" v-else >Finish</button>
-                </div>
-            </div>
-        </div>
+
      </transition-group>
     </div>
 </script>
@@ -91,7 +91,7 @@ Vue.component('reader', {
                 this.currentWord=idx
                 this.playAudio(this.words[idx])
                 var finish = this.currentWord==this.words.length-1
-                if (finish) {
+                if (finish && self.page.question) {
                     setTimeout(function(){
                         self.status = 1
                         self.visibleAnswer = -1
@@ -100,6 +100,8 @@ Vue.component('reader', {
                             self.showOption(0)
                         })
                     }, 1500)
+                } else if (finish && !self.page.question) {
+                    this.status = 2
                 } else {
                     this.status = 0
                 }

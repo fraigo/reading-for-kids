@@ -120,6 +120,132 @@
                     }
                 ]
             }
+        },
+        {
+            "content" : "El lobo caminó hasta la casa de troncos",
+            "image" : "img/three-little-pigs/008.png",
+            "question" : {
+                "title" : "A qué casa llegó el lobo?",
+                "answer" : 1,
+                "options" : [
+                    {
+                        "title": "La casa de paja"
+                    },
+                    {
+                        "title": "La casa de troncos"
+                    },
+                    {
+                        "title": "La casa de ladrillos"
+                    }
+                ]
+            }
+        },
+        {
+            "content" : "El lobo dijo déjame entrar",
+            "image" : "img/three-little-pigs/009.png"
+        },
+        {
+            "content" : "Los cerditos dijeron no te dejaremos entrar",
+            "image" : "img/three-little-pigs/009.png"
+        },
+        {  
+            "content" : "Soplaré y soplaré, y tu casa derrumbaré",
+            "image" : "img/three-little-pigs/010.png",
+            "question" : {
+                "title" : "Pudo derribar la casa?",
+                "answer" : 0,
+                "options" : [
+                    {
+                        "title": "Si"
+                    },
+                    {
+                        "title": "No"
+                    }
+                ]
+            }
+        },
+        {
+            "content" : "El lobo caminó hasta la casa de ladrillos",
+            "image" : "img/three-little-pigs/011.png",
+            "question" : {
+                "title" : "A qué casa llegó el lobo?",
+                "answer" : 2,
+                "options" : [
+                    {
+                        "title": "La casa de paja"
+                    },
+                    {
+                        "title": "La casa de troncos"
+                    },
+                    {
+                        "title": "La casa de ladrillos"
+                    }
+                ]
+            }
+        },
+        {
+            "content" : "El lobo dijo déjame entrar",
+            "image" : "img/three-little-pigs/012.png"
+        },
+        {
+            "content" : "Los cerditos dijeron no te dejaremos entrar",
+            "image" : "img/three-little-pigs/012.png"
+        },
+        {  
+            "content" : "Soplaré y soplaré, y tu casa derrumbaré",
+            "image" : "img/three-little-pigs/013.png",
+            "question" : {
+                "title" : "Pudo derribar la casa?",
+                "answer" : 1,
+                "options" : [
+                    {
+                        "title": "Si"
+                    },
+                    {
+                        "title": "No"
+                    }
+                ]
+            }
+        },
+        {
+            "content" : "El lobo subió y entró por la chimenea",
+            "image" : "img/three-little-pigs/014.png",
+            "question" : {
+                "title" : "Pudo entrar a la casa?",
+                "answer" : 0,
+                "options" : [
+                    {
+                        "title": "Si"
+                    },
+                    {
+                        "title": "No"
+                    }
+                ]
+            }
+        },
+        {
+            "content" : "Lo esperaba una olla de sopa caliente",
+            "image" : "img/three-little-pigs/015.png",
+            "question" : {
+                "title" : "Qué le pasó al lobo?",
+                "answer" : 1,
+                "options" : [
+                    {
+                        "title": "Se tomó la sopa"
+                    },
+                    {
+                        "title": "Se quemó con la sopa"
+                    }
+                ]
+            }
+        },
+        {
+            "content" : "El lobo corrió y nunca volvió",
+            "image" : "img/three-little-pigs/016.png"
+        },
+        {
+            "content" : "Fin",
+            "image" : "img/three-little-pigs/001.png"
         }
     ]
 }

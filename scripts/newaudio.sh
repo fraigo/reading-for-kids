@@ -22,6 +22,9 @@ FILE=${FILE/é/e}
 FILE=${FILE/í/i}
 FILE=${FILE/ó/o}
 FILE=${FILE/ú/u}
+FILE=${FILE/\?/}
+FILE=$(echo $FILE | awk '{print tolower($0)}')
+WORD=${WORD/\?/}
 say -v $VOICE "$WORD" 
 say -v $VOICE "$WORD" -o "$FILE"
 echo ffmpeg -i "$FILE.aiff" "$FILE.wav"
