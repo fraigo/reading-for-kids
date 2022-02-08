@@ -5,40 +5,40 @@
     {
       "content": "Había una vez una niña que vivía en un bosque",
       "image": "img/caperucita/000.png",
-      "question" : {
-          "title" : "Donde vivía la niña?",
-          "answer" : 2,
-          "options" : [
-              {
-                  "title": "Playa"
-              },
-              {
-                  "title": "Ciudad"
-              },
-              {
-                  "title": "Bosque"
-              }
-          ]
+      "question": {
+        "title": "Donde vivía la niña?",
+        "answer": 2,
+        "options": [
+          {
+            "title": "Playa"
+          },
+          {
+            "title": "Ciudad"
+          },
+          {
+            "title": "Bosque"
+          }
+        ]
       }
     },
     {
       "content": "Le llamaban Caperucita Roja",
       "image": "img/caperucita/000.png",
-      "question" : {
-        "title" : "Cual es su color favorito?",
-        "answer" : 1,
-        "options" : [
-            {
-                "title": "Azul"
-            },
-            {
-                "title": "Rojo"
-            },
-            {
-                "title": "Verde"
-            }
+      "question": {
+        "title": "Cual es su color favorito?",
+        "answer": 1,
+        "options": [
+          {
+            "title": "Azul"
+          },
+          {
+            "title": "Rojo"
+          },
+          {
+            "title": "Verde"
+          }
         ]
-    }
+      }
     },
     {
       "content": "Un día su mamá le dijo qué la abuela estaba enferma",
@@ -47,6 +47,30 @@
     {
       "content": "Le mandó llevar pastel, frutas y miel",
       "image": "img/caperucita/002.png"
+    },
+    {
+      "content": "Su mamá le dijo que tenga cuidado con el lobo",
+      "image": "img/caperucita/001.png"
+    },
+    {
+      "content": "Caperucita se fue pensando en su abuela",
+      "image": "img/caperucita/003.png"
+    },
+    {
+      "content": "cantando y saltando por el bosque",
+      "image": "img/caperucita/003.png"
+    },
+    {
+      "content": "Caperucita se dristrajo jugando con flores",
+      "image": "img/caperucita/004.png"
+    },
+    {
+      "content": "Un lobo apareció y le preguntó donde iba",
+      "image": "img/caperucita/005.png"
+    },
+    {
+      "content": "le dijo que iba dondé su abuela",
+      "image": "img/caperucita/005.png"
     },
     {
       "content": "Fin",
