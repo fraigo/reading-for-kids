@@ -11,6 +11,7 @@ do
   FILE=${FILE/ó/o}
   FILE=${FILE/ú/u}
   FILE=${FILE/\?/}
+  FILE=${FILE/,/}
   FILE=$(echo $FILE | awk '{print tolower($0)}')
   if [ ! -e www/audio/$1/$FILE.wav ]; then
     echo "Creating $WORD..."

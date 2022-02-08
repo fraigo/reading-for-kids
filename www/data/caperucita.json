@@ -1,0 +1,56 @@
+{
+  "title": "Caperucita Roja",
+  "lang": "es",
+  "pages": [
+    {
+      "content": "Había una vez una niña que vivía en un bosque",
+      "image": "img/caperucita/000.png",
+      "question" : {
+          "title" : "Donde vivía la niña?",
+          "answer" : 2,
+          "options" : [
+              {
+                  "title": "Playa"
+              },
+              {
+                  "title": "Ciudad"
+              },
+              {
+                  "title": "Bosque"
+              }
+          ]
+      }
+    },
+    {
+      "content": "Le llamaban Caperucita Roja",
+      "image": "img/caperucita/000.png",
+      "question" : {
+        "title" : "Cual es su color favorito?",
+        "answer" : 1,
+        "options" : [
+            {
+                "title": "Azul"
+            },
+            {
+                "title": "Rojo"
+            },
+            {
+                "title": "Verde"
+            }
+        ]
+    }
+    },
+    {
+      "content": "Un día su mamá le dijo qué la abuela estaba enferma",
+      "image": "img/caperucita/001.png"
+    },
+    {
+      "content": "Le mandó llevar pastel, frutas y miel",
+      "image": "img/caperucita/002.png"
+    },
+    {
+      "content": "Fin",
+      "image": "img/caperucita/000.png"
+    }
+  ]
+}

@@ -49,6 +49,7 @@
             window.addEventListener('hashchange', function(){
                 self.loadContent(document.location.hash.replace('#',''))
             })
+
         },
         mounted:function(){
             window.app=this
@@ -86,7 +87,7 @@
             })
             this.loadData()
             if (!this.appData.contentId){
-                this.appData.contentId='default'
+                this.appData.contentId='caperucita'
             }
             if (document.location.hash!=''){
                 this.loadHash()
@@ -106,6 +107,10 @@
                 var appData = localStorage.getItem(APPDATA_KEY)
                 if (appData) {
                     this.appData = JSON.parse(appData)
+                }
+                var param = document.location.search.replace('?','');
+                if (param!=''){
+                    this.appData.contentId = param;
                 }
             },
             saveData: function(){

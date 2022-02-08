@@ -23,6 +23,7 @@ FILE=${FILE/í/i}
 FILE=${FILE/ó/o}
 FILE=${FILE/ú/u}
 FILE=${FILE/\?/}
+FILE=${FILE/,/}
 FILE=$(echo $FILE | awk '{print tolower($0)}')
 WORD=${WORD/\?/}
 say -v $VOICE "$WORD" 
