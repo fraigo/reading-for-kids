@@ -178,8 +178,11 @@ Vue.component('reader', {
             id = id.replaceAll('í','i')
             id = id.replaceAll('ó','o')
             id = id.replaceAll('ú','u')
+            id = id.replaceAll('¿','')
+            id = id.replaceAll('!','')
             id = id.replaceAll('?','')
             id = id.replaceAll(',','')
+            id = id.replaceAll(':','')
             id = id.replaceAll('.','')
             return id
         },
@@ -214,7 +217,7 @@ Vue.component('reader', {
                         self.playAudio(audio)
                     }
                 },time,audio1,idx)
-                time+=audioEngine.duration(audio1)-200
+                time+=audioEngine.duration(audio1)-100
             }
             setTimeout(function(){ 
                 if (callback) {
