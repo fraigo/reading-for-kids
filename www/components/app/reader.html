@@ -19,7 +19,7 @@
                 <span v-for="(word,wordIdx) in words" :key="wordIdx" @click="showWord(wordIdx)" :active="wordIdx<=currentWord" :next="wordIdx==currentWord+1">{{word}} </span>
             </div>
             <div key="question" class="reader-question" v-if="status==1 && page.question">
-                <div class="reader-question-title" @click="readWords(page.question.title.split(' '))" >{{ page.question.title}}</div>
+                <div class="reader-question-title" @click="readQuestion()" >{{ page.question.title}}</div>
                 <div class="reader-question-answers">
                     <div class="reader-question-answer" @click="currentAnswer=answerIdx" :current="answerIdx==currentAnswer" v-for="(answer,answerIdx) in page.question.options" 
                         :display="answerIdx<=visibleAnswer" :va="visibleAnswer" :idx="answerIdx" :key="answerIdx">
@@ -55,6 +55,7 @@ Vue.component('reader', {
             currentAnswer: -1,
             visibleAnswer: -1,
             playProc: null,
+            readWordTimeout: [],
             popup: null,
             orientation: "portrait"
         }
@@ -85,6 +86,18 @@ Vue.component('reader', {
                 self.currentAnswer = -1
             })
         },
+        readQuestion: function(delay){
+            if (!delay) delay=0
+            var self=this
+            setTimeout(function(){
+                self.status = 1
+                self.visibleAnswer = -1
+                self.$forceUpdate()
+                self.readWords(self.page.question.title.split(' '), false, function(){
+                    self.showOption(0)
+                })
+            }, delay)
+        },
         showWord: function(idx){
             var self = this
             if (idx<=this.currentWord+1) {
@@ -92,14 +105,7 @@ Vue.component('reader', {
                 this.playAudio(this.words[idx])
                 var finish = this.currentWord==this.words.length-1
                 if (finish && self.page.question) {
-                    setTimeout(function(){
-                        self.status = 1
-                        self.visibleAnswer = -1
-                        self.$forceUpdate()
-                        self.readWords(self.page.question.title.split(' '), false, function(){
-                            self.showOption(0)
-                        })
-                    }, 1500)
+                    self.readQuestion(1500)
                 } else if (finish && !self.page.question) {
                     this.status = 2
                 } else {
@@ -207,17 +213,22 @@ Vue.component('reader', {
         readWords: function (list, showWord, callback) {
             var time = 50
             var self = this
+            for(var idx=self.readWordTimeout.length-1; idx>=0; idx--) {
+                clearTimeout(self.readWordTimeout[idx])
+                self.readWordTimeout.splice(idx,1)
+            }
             for(var idx=0; idx< list.length; idx++) {
                 var audio1 = this.audioId(list[idx])
                 console.log('play', audio1)
-                setTimeout(function(audio,idx){ 
+                var proc=setTimeout(function(audio,idx){ 
                     if (showWord) {
                         self.showWord(idx)
                     } else {
                         self.playAudio(audio)
                     }
                 },time,audio1,idx)
-                time+=audioEngine.duration(audio1)-100
+                self.readWordTimeout.push(proc);
+                time+=audioEngine.duration(audio1)-10
             }
             setTimeout(function(){ 
                 if (callback) {
@@ -268,7 +279,7 @@ Vue.component('reader', {
     max-height: 80vh;
 }
 .reader-text span[active="true"]{
-    color: rgb(255,255,128);
+    color: rgb(216, 164, 23);
     cursor: pointer;
 }
 .reader-text span[next="true"]{
@@ -292,6 +303,10 @@ Vue.component('reader', {
     width: 100%;
     border: 1px solid #eee;
     border-radius: 7px;
+}
+.reader-question-title{
+    font-size: 1.5em;
+    margin: 8px 0;
 }
 .reader-question-answer{
     padding: 8px;
@@ -320,7 +335,12 @@ Vue.component('reader', {
         flex: 1 0 100%;
         box-sizing: border-box;
     }
+}
 
+@media (prefers-color-scheme: dark) {
+    .reader-text span[active="true"]{
+        color: rgb(255,255,128);
+    }
 }
 
 </style>
