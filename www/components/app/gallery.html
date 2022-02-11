@@ -1,0 +1,74 @@
+<!-- text-template -->
+<script type="text/x-template" id="gallery-component-template">
+    <div class="gallery-component">
+        <slot></slot>
+        <div class="gallery-container">
+            <div v-for="(item,idx) in items" class="gallery-item" :style="{backgroundColor:item.color}"
+                @click="$emit('select',idx)" :key="idx" v-show="item[lang]">
+                <div class="gallery-image" :style="{backgroundImage: 'url('+item['cover']+')'}">
+                </div>
+                <div class="gallery-title">{{item[lang]}}</div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/javascript">
+Vue.component('gallery', {
+    template: '#gallery-component-template',
+    data: function(){
+        return {
+            zoom : 1
+        }
+    },
+    props: { 
+        items: Object,
+        lang: String,
+    },
+    mounted:function(){
+        console.log("gallery-component mounted");
+        var self = this;
+    },
+    methods: {
+    },
+    computed:{
+    }
+});
+</script>
+<style>
+.gallery-component{
+    font-size: 16px;
+    line-height: 1.5em;
+}
+.gallery-item{
+    width: 240px;
+    box-sizing: border-box;
+    margin: 16px;
+    padding-top: 30px;
+    border-radius: 0 9px 9px 0;
+    box-shadow: 7px 6px 0px 6px #ccb69f;
+    background-color: #241301;
+    cursor: pointer;
+}
+.gallery-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0 auto;
+}
+.gallery-image{
+    height: 120px;
+    position: relative;
+    background-position: center center;
+    background-size: cover;
+    margin: 30px 30px;
+    box-sizing: border-box;
+}
+.gallery-title{
+    width: 100%;
+    font-size: 1.3rem;
+    padding: 8px;
+    text-align: center;
+    margin: 16px 0;
+}
+</style>
+    

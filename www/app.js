@@ -3,6 +3,7 @@ var components=[
     "base/app-content",
     "base/app-popup",
     "app/reader",
+    "app/gallery",
 ]
 
 function listDir(path) {

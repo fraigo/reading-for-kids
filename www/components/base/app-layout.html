@@ -2,10 +2,14 @@
 <script type="text/x-template" id="app-layout-template">
     <div class="app-layout" :style="{fontSize:size+'rem'}" ref="layout">
         <div class="app-header">
-            {{contentData?contentData.title:'Reader'}}
+            <div>{{contentData?contentData.title:'Reader'}}</div>
+            <div>
+                <a @click="home()" >Home</a>
+            </div>
         </div>
         <transition-group name="fade" tag="div" class="app-main">
-            <div v-if="contentData" key="book" is="reader" :book="contentData"></div>
+            <div v-if="contentData" key="book" is="reader" :book="contentData" @finish="home()"></div>
+            <div v-if="!contentData && books" key="books" is="gallery" :items="books" :lang="lang" @select="loadContent($event)"></div>
             <div class="app-message" v-if="message" :key="message?message:''"><div >{{message}}</div></div>
         </transition-group>
         <div is="popup" :info="popup" ref="popup"></div>
@@ -35,6 +39,7 @@
                 message: null,
                 loading: false,
                 contentData: null,
+                books: {},
                 popup: {},
                 cacheId: (new Date()).getTime(),
                 actions: {
@@ -49,7 +54,9 @@
             window.addEventListener('hashchange', function(){
                 self.loadContent(document.location.hash.replace('#',''))
             })
-
+            loadData('data/books.json',function(data){
+                self.books = JSON.parse(data);
+            })
         },
         mounted:function(){
             window.app=this
@@ -86,16 +93,18 @@
                 }
             })
             this.loadData()
-            if (!this.appData.contentId){
-                this.appData.contentId='caperucita'
-            }
             if (document.location.hash!=''){
                 this.loadHash()
-            }else{
+            }else if(this.appData.contentId){
                 this.loadContent(this.appData.contentId)
             }
         },
         methods: {
+            home: function(){
+                this.contentData=null
+                this.appData.contentId=null
+                this.saveData()
+            },
             loadHash: function(){
                 var hash=document.location.hash.replace('#','').split('/')
                 this.loadContent(hash[0])
@@ -210,6 +219,7 @@
     flex-wrap: wrap;
     align-items: center;
     padding: 0 16px;
+    justify-content:space-between;
 }
 .app-main{
     flex:1;

@@ -174,8 +174,7 @@ Vue.component('reader', {
             },2000)
         },
         finish: function() {
-            this.pageNum=-1
-            this.nextPage()
+            this.$emit("finish")
         },
         audioId: function(id){
             id = id.toLowerCase()
