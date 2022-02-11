@@ -12,10 +12,11 @@
         <div class="reader-right" key="right">
             <div class="reader-text" key="pageNum">
                 <span v-for="(word,wordIdx) in words" :key="wordIdx" @click="showWord(wordIdx)" :active="wordIdx<=currentWord" :next="wordIdx==currentWord+1">{{word}} </span>
+                <br>
+                <button @click="readWords(words, true)">
+                    <img src="img/audio.svg" height="32" >
+                </button>
             </div>
-            <button @click="readWords(words, true)">
-                <img src="img/audio.svg" height="32" >
-            </button>
             <div key="question" class="reader-question" v-if="status==1 && page.question">
                 <div class="reader-question-title" @click="readQuestion()" >{{ page.question.title}}</div>
                 <div class="reader-question-answers">
@@ -283,6 +284,7 @@ Vue.component('reader', {
     font-size: 2rem;
     color: rgb(80,80,80);
     line-height: 1.5em;
+    position: relative;
 }
 .reader-content{
     text-align: center;
@@ -309,6 +311,7 @@ Vue.component('reader', {
 .reader-right{
     flex: 0 0 55%;
     box-sizing: border-box;
+    position: relative;
 }
 .reader button{
     cursor: pointer;
@@ -317,7 +320,7 @@ Vue.component('reader', {
     margin: 24px auto;
     max-width: 300px;
     width: 100%;
-    background-color: rgba(255,255,255,0.2);
+    background-color: #666;
     border-radius: 7px;
     box-sizing: border-box;
     padding: 8px;
@@ -358,6 +361,16 @@ Vue.component('reader', {
     }
     .reader-question-title{
         font-size: 1.25rem;
+    }
+}
+
+@media (max-height:479px){
+    .reader-question{
+        position: absolute;
+        top: 0;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
     }
 }
 
