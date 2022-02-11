@@ -127,7 +127,7 @@ Vue.component('reader', {
                 }, time)
             }
         },
-        stopSounds: function(){
+        stopSounds: function(stopOptions){
             var self=this;
             clearTimeout(self.playProc);
             self.playProc=null;
@@ -135,7 +135,9 @@ Vue.component('reader', {
                 clearTimeout(self.readWordTimeout[idx])
                 self.readWordTimeout.splice(idx,1)
             }
-            self.readingOptions=false
+            if (!stopOptions){
+                self.readingOptions=false
+            }
         },
         showAll: function(){
             var self = this
@@ -225,7 +227,7 @@ Vue.component('reader', {
         readWords: function (list, showWord, callback) {
             var time = 50
             var self = this
-            this.stopSounds()
+            this.stopSounds(true)
             for(var idx=0; idx< list.length; idx++) {
                 var audio1 = this.audioId(list[idx])
                 console.log('play', audio1)
