@@ -176,17 +176,20 @@ Vue.component('reader', {
                 })
             }
         },
-        nextPage: function(){
+        autoPlay:function(){
             var self = this
+            this.playProc = setTimeout(function(){
+                self.showAll()
+            },2000)
+        },
+        nextPage: function(){
             this.stopSounds();
             this.pageNum++
             this.currentWord = -1
             this.currentAnswer = -1
             this.status = 0
             this.loadWords()
-            this.playProc = setTimeout(function(){
-                self.showAll()
-            },2000)
+            autoPlay()
         },
         finish: function() {
             this.$emit("finish")
@@ -313,12 +316,14 @@ Vue.component('reader', {
     margin: 24px auto;
     max-width: 300px;
     width: 100%;
-    border: 1px solid #eee;
+    background-color: rgba(255,255,255,0.2);
     border-radius: 7px;
+    box-sizing: border-box;
+    padding: 8px;
 }
 .reader-question-title{
     font-size: 1.5em;
-    margin: 8px 0;
+    padding-bottom: 8px;
 }
 .reader-question-answer{
     padding: 8px;
