@@ -109,7 +109,7 @@
             "content" : "Soplaré y soplaré, y tu casa derrumbaré",
             "image" : "img/three-little-pigs/007.png",
             "question" : {
-                "title" : "Pudo derribar la casa?",
+                "title" : "Pudo derrumbar la casa?",
                 "answer" : 0,
                 "options" : [
                     {
@@ -141,18 +141,18 @@
             }
         },
         {
-            "content" : "El lobo dijo déjame entrar",
+            "content" : "El lobo dijo: déjame entrar",
             "image" : "img/three-little-pigs/009.png"
         },
         {
-            "content" : "Los cerditos dijeron no te dejaremos entrar",
+            "content" : "Los cerditos dijeron: no te dejaremos entrar",
             "image" : "img/three-little-pigs/009.png"
         },
         {  
             "content" : "Soplaré y soplaré, y tu casa derrumbaré",
             "image" : "img/three-little-pigs/010.png",
             "question" : {
-                "title" : "Pudo derribar la casa?",
+                "title" : "Pudo derrumbar la casa?",
                 "answer" : 0,
                 "options" : [
                     {
@@ -184,18 +184,18 @@
             }
         },
         {
-            "content" : "El lobo dijo déjame entrar",
+            "content" : "El lobo dijo: déjame entrar",
             "image" : "img/three-little-pigs/012.png"
         },
         {
-            "content" : "Los cerditos dijeron no te dejaremos entrar",
+            "content" : "Los cerditos dijeron: no te dejaremos entrar",
             "image" : "img/three-little-pigs/012.png"
         },
         {  
             "content" : "Soplaré y soplaré, y tu casa derrumbaré",
             "image" : "img/three-little-pigs/013.png",
             "question" : {
-                "title" : "Pudo derribar la casa?",
+                "title" : "Pudo derrumbar la casa?",
                 "answer" : 1,
                 "options" : [
                     {
@@ -211,14 +211,17 @@
             "content" : "El lobo subió y entró por la chimenea",
             "image" : "img/three-little-pigs/014.png",
             "question" : {
-                "title" : "Pudo entrar a la casa?",
-                "answer" : 0,
+                "title" : "Por donde entró el lobo?",
+                "answer" : 1,
                 "options" : [
                     {
-                        "title": "Si"
+                        "title": "Por la ventana"
                     },
                     {
-                        "title": "No"
+                        "title": "Por la chimenea"
+                    },
+                    {
+                        "title": "Por la puerta"
                     }
                 ]
             }
