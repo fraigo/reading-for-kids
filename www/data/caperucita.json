@@ -25,7 +25,7 @@
       "content": "Le llamaban Caperucita Roja",
       "image": "img/caperucita/000.png",
       "question": {
-        "title": "Cual es su color favorito?",
+        "title": "De qué color era su capa?",
         "answer": 1,
         "options": [
           {
@@ -46,43 +46,105 @@
     },
     {
       "content": "Le mandó llevar pastel, frutas y miel",
-      "image": "img/caperucita/002.png"
+      "image": "img/caperucita/002.png",
+      "question": {
+        "title": "Qué le llevó a su abuela?",
+        "answer": 2,
+        "options": [
+          {
+            "title": "Galletas"
+          },
+          {
+            "title": "Medicina"
+          },
+          {
+            "title": "Pastel"
+          }
+        ]
+      }
     },
     {
       "content": "Su mamá le dijo que tenga cuidado con el lobo",
-      "image": "img/caperucita/001.png"
+      "image": "img/caperucita/001.png",
+      "question": {
+        "title": "Quien vive en el bosque?",
+        "answer": 1,
+        "options": [
+          {
+            "title": "Un león"
+          },
+          {
+            "title": "Un lobo"
+          },
+          {
+            "title": "Un oso"
+          }
+        ]
+      }
     },
     {
-      "content": "Caperucita se fue pensando en su abuela",
+      "content": "Caperucita se fue cantando al bosque",
       "image": "img/caperucita/003.png"
     },
     {
-      "content": "cantando y saltando por el bosque",
-      "image": "img/caperucita/003.png"
-    },
-    {
-      "content": "Caperucita se dristrajo jugando con flores",
+      "content": "Pero se dristrajo jugando con flores",
       "image": "img/caperucita/004.png"
     },
     {
       "content": "Un lobo apareció y le preguntó donde iba",
-      "image": "img/caperucita/005.png"
+      "image": "img/caperucita/005.png",
+      "question": {
+        "title": "Dónde va caperucita?",
+        "answer": 1,
+        "options": [
+          {
+            "title": "Donde su mamá"
+          },
+          {
+            "title": "Donde su abuela"
+          }
+        ]
+      }
     },
     {
       "content": "Le dijo que iba dondé su abuela",
       "image": "img/caperucita/005.png"
     },
     {
-      "content": "El lobo le dijo que use un atajo a la casa de la abuela.",
+      "content": "El lobo le dijo que use un atajo para llegar rápido.",
       "image": "img/caperucita/006.png"
     },
     {
       "content": "Pero el camino era mucho más largo.",
-      "image": "img/caperucita/006.png"
+      "image": "img/caperucita/006.png",
+      "question": {
+        "title": "Qué camino tomó caperucita?",
+        "answer": 0,
+        "options": [
+          {
+            "title": "El camino largo"
+          },
+          {
+            "title": "El camino corto"
+          }
+        ]
+      }
     },
     {
       "content": "Al llegar a la casa de su abuela, golpeó la puerta.",
-      "image": "img/caperucita/007.png"
+      "image": "img/caperucita/007.png",
+      "question": {
+        "title": "Quién estaba en la casa de su abuela?",
+        "answer": 0,
+        "options": [
+          {
+            "title": "El lobo"
+          },
+          {
+            "title": "La abuela"
+          }
+        ]
+      }
     },
     {
       "content": "Adelante, dijo la abuela, con una voz extraña.",
@@ -95,6 +157,34 @@
     {
       "content": "Para verte mejor!",
       "image": "img/caperucita/008.png"
+    },
+    {
+      "content": "Abuelita, abuelita, ¿por qué tienes la nariz tan grande?",
+      "image": "img/caperucita/009.png"
+    },
+    {
+      "content": "Para olerte mejor!",
+      "image": "img/caperucita/009.png"
+    },
+    {
+      "content": "Abuelita, abuelita, ¿por qué tienes la boca tan grande?",
+      "image": "img/caperucita/010.png"
+    },
+    {
+      "content": "Para comerte mejor!",
+      "image": "img/caperucita/010.png",
+      "question": {
+        "title": "El lobo se comió a caperucita?",
+        "answer": 1,
+        "options": [
+          {
+            "title": "No"
+          },
+          {
+            "title": "Si"
+          }
+        ]
+      }
     },
     {
       "content": "Fin",
