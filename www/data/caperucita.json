@@ -187,6 +187,49 @@
       }
     },
     {
+      "content": "El lobo se comió a caperucita y tomó una siesta",
+      "image": "img/caperucita/011.png",
+      "question": {
+        "title": "Qué tenía en la panza?",
+        "answer": 1,
+        "options": [
+          {
+            "title": "Un Pastel"
+          },
+          {
+            "title": "A caperucita"
+          }
+        ]
+      }
+    },
+    {
+      "content": "Un cazador vio al lobo y lo atrapó",
+      "image": "img/caperucita/011.png"
+    },
+    {
+      "content": "El cazador rescató a caperucita de su panza",
+      "image": "img/caperucita/012.png",
+      "question": {
+        "title": "Quién rescató a caperucita?",
+        "answer": 2,
+        "options": [
+          {
+            "title": "Un policía"
+          },
+          {
+            "title": "Un bombero"
+          },
+          {
+            "title": "Un cazador"
+          }
+        ]
+      }
+    },
+    {
+      "content": "Celebraron comiendo pastel, frutas y miel",
+      "image": "img/caperucita/012.png"
+    },    
+    {
       "content": "Fin",
       "image": "img/caperucita/000.png"
     }
