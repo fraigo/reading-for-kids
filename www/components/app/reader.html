@@ -192,11 +192,7 @@ Vue.component('reader', {
                     audios = audios.concat(answer.title.split(' '))
                 }
             }
-            for(var idx=0; idx< audios.length; idx++) {
-                var audio1 = audioId(audios[idx])
-                var base = document.location.pathname.replace("index.html","")
-                audioEngine.load(base+"audio/"+this.book.lang+"/"+audio1+".wav", audio1)
-            }
+            loadAudios(audios,this.book.lang)
         },
         readWords: function (list, showWord, callback) {
             var self = this

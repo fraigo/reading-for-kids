@@ -1,6 +1,5 @@
 var components=[
     "base/app-layout",
-    "base/app-content",
     "base/app-popup",
     "app/reader",
     "app/gallery",
@@ -79,13 +78,18 @@ var stopSounds= function(){
     }
 }
 
-var loadAudios=function(audios,lang){
-    console.log('loading ',audios.join(','));
-    for(var idx=0; idx< audios.length; idx++) {
-        var audio1 = audioId(audios[idx])
+var loadAudios=function(audioList,lang){
+    var audios={};
+    for(var idx=0; idx< audioList.length; idx++) {
+        var audio1 = audioId(audioList[idx])
         var base = document.location.pathname.replace("index.html","")
-        audioEngine.load(base+"audio/"+lang+"/"+audio1+".wav", audio1)
+        audios[audio1]=base+"audio/"+lang+"/"+audio1+".wav";
     }
+    console.log('loading ',audioList.join(','), audios);
+    audioEngine.loadList(audios, function(result) {
+    }, function(id, error) {
+        (console.warn||console.log)('Load error',id,audios[id])
+    })
 }
 
 var playSequence= function (list, itemCallback, endCallback) {
