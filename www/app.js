@@ -42,6 +42,68 @@ function readLocalFile(file, callback, error){
 
 var  audioEngine = new WebAudio();
 
+var audioId= function(id){
+    id = id.toLowerCase()
+    id = id.replaceAll('á','a')
+    id = id.replaceAll('é','e')
+    id = id.replaceAll('í','i')
+    id = id.replaceAll('ó','o')
+    id = id.replaceAll('ú','u')
+    id = id.replaceAll('¿','')
+    id = id.replaceAll('!','')
+    id = id.replaceAll('?','')
+    id = id.replaceAll(',','')
+    id = id.replaceAll(':','')
+    id = id.replaceAll('.','')
+    return id
+}
+
+var audioProcs = [];
+
+var playAudio= function(word, callback) {
+    var audio1 = audioId(word)
+    audioEngine.playFromStart(audio1)
+    if (callback){
+        var time=audioEngine.duration(audio1)
+        var proc=setTimeout(function(){
+            callback()
+        }, time)
+        audioProcs.push(proc)
+    }
+}
+
+var stopSounds= function(){
+    for(var idx=audioProcs.length-1; idx>=0; idx--) {
+        clearTimeout(audioProcs[idx])
+        audioProcs.splice(idx,1)
+    }
+}
+
+var playSequence= function (list, itemCallback, endCallback) {
+    var time = 50
+    stopSounds()
+    for(var idx=0; idx< list.length; idx++) {
+        var audio1 = audioId(list[idx])
+        var duration1 = audioEngine.duration(audio1);
+        console.log('play', audio1)
+        var proc=setTimeout(function(idx,audio,duration){ 
+            if (itemCallback) {
+                itemCallback(idx,audio,duration)
+            } else {
+                playAudio(audio)
+            }
+        },time,idx,audio1,duration1)
+        audioProcs.push(proc);
+        time+=duration1;
+    }
+    var proc2=setTimeout(function(){ 
+        if (endCallback) {
+            endCallback()
+        }
+    }, time+200)
+    audioProcs.push(proc2);
+}
+
 
 var loadData=function(url,callback, error){
 

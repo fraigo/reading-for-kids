@@ -3,11 +3,11 @@
     <div class="gallery-component">
         <slot></slot>
         <div class="gallery-container">
-            <div v-for="(item,idx) in items" class="gallery-item" :style="{backgroundColor:item.color}"
+            <div v-for="(item,idx) in items" class="gallery-item" :style="{backgroundColor:item.background}"
                 @click="$emit('select',idx)" :key="idx" v-show="item[lang]">
                 <div class="gallery-image" :style="{backgroundImage: 'url('+item['cover']+')'}">
                 </div>
-                <div class="gallery-title">{{item[lang]}}</div>
+                <div class="gallery-title" :style={color:item.color}>{{item[lang]}}</div>
             </div>
         </div>
     </div>

@@ -12,10 +12,13 @@
         <div class="reader-right" key="right">
             <div class="reader-text" key="pageNum">
                 <span v-for="(word,wordIdx) in words" :key="wordIdx" @click="showWord(wordIdx)" :active="wordIdx<=currentWord" :next="wordIdx==currentWord+1">{{word}} </span>
-                <br>
+                <div>
                 <button @click="readWords(words, true)">
                     <img src="img/audio.svg" height="32" >
                 </button>
+                <button @click="nextPage()" v-if="status==2 && !page.question && pageNum+1<book.pages.length">Next Page</button>
+                <button @click="finish()" v-if="status==2 && !page.question  && pageNum+1==book.pages.length" >Finish</button>
+            </div>
             </div>
             <div key="question" class="reader-question" v-if="status==1 && page.question">
                 <div class="reader-question-title" @click="readQuestion()" >{{ page.question.title}}</div>
@@ -27,14 +30,7 @@
                     </div>
                 </div>
             </div>
-            <div key="step" class="reader-question" v-if="status==2 && !page.question">
-                <div class="reader-question-answers">
-                    <div class="reader-question-answer" display="true">
-                        <button @click="nextPage()" v-if="pageNum+1<book.pages.length">Next Page</button>
-                        <button @click="finish()" v-else >Finish</button>
-                    </div>
-                </div>
-            </div>            
+                      
         </div>
         <div is="popup" :info="popup" key="popup.title" ref="popup"></div>
 
@@ -54,7 +50,7 @@ Vue.component('reader', {
             currentAnswer: -1,
             visibleAnswer: -1,
             playProc: null,
-            readWordTimeout: [],
+            readOptionTimeout: [],
             popup: null
         }
     },
@@ -100,13 +96,13 @@ Vue.component('reader', {
                     })
                 }
             }, delay)
-            self.readWordTimeout.push(proc)
+            self.readOptionTimeout.push(proc)
         },
         showWord: function(idx){
             var self = this
             if (idx<=this.currentWord+1) {
                 this.currentWord=idx
-                this.playAudio(this.words[idx])
+                playAudio(this.words[idx])
                 var finish = this.currentWord==this.words.length-1
                 if (finish && self.page.question) {
                     self.readQuestion(1500)
@@ -117,24 +113,13 @@ Vue.component('reader', {
                 }
             }
         },
-        playAudio: function(word, callback) {
-            console.log('playing',word)
-            var audio1 = this.audioId(word)
-            audioEngine.playFromStart(audio1)
-            if (callback){
-                var time=audioEngine.duration(audio1)
-                setTimeout(function(){
-                    callback()
-                }, time)
-            }
-        },
         stopSounds: function(stopOptions){
             var self=this;
             clearTimeout(self.playProc);
             self.playProc=null;
-            for(var idx=self.readWordTimeout.length-1; idx>=0; idx--) {
-                clearTimeout(self.readWordTimeout[idx])
-                self.readWordTimeout.splice(idx,1)
+            for(var idx=self.readOptionTimeout.length-1; idx>=0; idx--) {
+                clearTimeout(self.readOptionTimeout[idx])
+                self.readOptionTimeout.splice(idx,1)
             }
             if (!stopOptions){
                 self.readingOptions=false
@@ -190,25 +175,10 @@ Vue.component('reader', {
             this.currentAnswer = -1
             this.status = 0
             this.loadWords()
-            autoPlay()
+            //this.autoPlay()
         },
         finish: function() {
             this.$emit("finish")
-        },
-        audioId: function(id){
-            id = id.toLowerCase()
-            id = id.replaceAll('á','a')
-            id = id.replaceAll('é','e')
-            id = id.replaceAll('í','i')
-            id = id.replaceAll('ó','o')
-            id = id.replaceAll('ú','u')
-            id = id.replaceAll('¿','')
-            id = id.replaceAll('!','')
-            id = id.replaceAll('?','')
-            id = id.replaceAll(',','')
-            id = id.replaceAll(':','')
-            id = id.replaceAll('.','')
-            return id
         },
         loadWords: function() {
             if (!this.book){
@@ -223,34 +193,25 @@ Vue.component('reader', {
                 }
             }
             for(var idx=0; idx< audios.length; idx++) {
-                var audio1 = this.audioId(audios[idx])
+                var audio1 = audioId(audios[idx])
                 var base = document.location.pathname.replace("index.html","")
                 audioEngine.load(base+"audio/"+this.book.lang+"/"+audio1+".wav", audio1)
             }
         },
         readWords: function (list, showWord, callback) {
-            var time = 50
             var self = this
             this.stopSounds(true)
-            for(var idx=0; idx< list.length; idx++) {
-                var audio1 = this.audioId(list[idx])
-                console.log('play', audio1)
-                var proc=setTimeout(function(audio,idx){ 
-                    if (showWord) {
-                        self.showWord(idx)
-                    } else {
-                        self.playAudio(audio)
-                    }
-                },time,audio1,idx)
-                self.readWordTimeout.push(proc);
-                time+=audioEngine.duration(audio1)-10
-            }
-            var proc2=setTimeout(function(){ 
+            playSequence(list, function(idx,audio,duration){
+                if (showWord) {
+                    self.showWord(idx)
+                } else {
+                    playAudio(audio)
+                }
+            }, function(){
                 if (callback) {
                     callback()
                 }
-            }, time+200)
-            self.readWordTimeout.push(proc2);
+            })
         }
     },
     computed:{

@@ -2,11 +2,13 @@
     "caperucita" : {
         "cover" : "img/caperucita/000.png",
         "es" : "Caperucita Roja",
-        "color" : "#641301"
+        "background" : "#601000",
+        "color" : "#C08000"
     },
     "three-little-pigs" : {
         "cover" : "img/three-little-pigs/001.png",
         "es" : "Los Tres Cerditos",
-        "color" : "rgb(226 106 106)"
+        "background" : "#e26a6a",
+        "color" : "#663535"
     }
 }
