@@ -79,6 +79,15 @@ var stopSounds= function(){
     }
 }
 
+var loadAudios=function(audios,lang){
+    console.log('loading ',audios.join(','));
+    for(var idx=0; idx< audios.length; idx++) {
+        var audio1 = audioId(audios[idx])
+        var base = document.location.pathname.replace("index.html","")
+        audioEngine.load(base+"audio/"+lang+"/"+audio1+".wav", audio1)
+    }
+}
+
 var playSequence= function (list, itemCallback, endCallback) {
     var time = 50
     stopSounds()

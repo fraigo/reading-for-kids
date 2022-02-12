@@ -4,7 +4,7 @@
         <slot></slot>
         <div class="gallery-container">
             <div v-for="(item,idx) in items" class="gallery-item" :style="{backgroundColor:item.background}"
-                @click="$emit('select',idx)" :key="idx" v-show="item[lang]">
+                @click="select(idx,item[lang])" :key="idx" v-show="item[lang]">
                 <div class="gallery-image" :style="{backgroundImage: 'url('+item['cover']+')'}">
                 </div>
                 <div class="gallery-title" :style={color:item.color}>{{item[lang]}}</div>
@@ -26,9 +26,26 @@ Vue.component('gallery', {
     },
     mounted:function(){
         console.log("gallery-component mounted");
-        var self = this;
+        this.loadSounds()
     },
     methods: {
+        loadSounds: function(){
+            for(var i in this.items){
+                loadAudios(this.items[i][this.lang].split(" "), this.lang)
+            }
+        },
+        select:function(idx){
+            var text=this.items[idx][this.lang];
+            var self = this;
+            playSequence(text.split(" "), null, function(){
+                self.$emit('select',idx);
+            });
+        }
+    },
+    watch: {
+        items: function(items){
+            this.loadSounds()
+        }
     },
     computed:{
     }
