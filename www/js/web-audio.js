@@ -1,4 +1,4 @@
-var WEBAUDIO_DEBUG = true;
+var WEBAUDIO_DEBUG = false;
 var WEBAUDIO_MULTI = true;
 
 
