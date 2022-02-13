@@ -12,13 +12,17 @@
         <div class="reader-right" key="right">
             <div class="reader-text" key="pageNum">
                 <span v-for="(word,wordIdx) in words" :key="wordIdx" @click="showWord(wordIdx)" :active="wordIdx<=currentWord" :next="wordIdx==currentWord+1">{{word}} </span>
-                <div>
-                <button @click="readWords(words, true)">
-                    <img src="img/audio.svg" height="32" >
-                </button>
-                <button @click="nextPage()" v-if="status==2 && !page.question && pageNum+1<book.pages.length">Next Page</button>
-                <button @click="finish()" v-if="status==2 && !page.question  && pageNum+1==book.pages.length" >Finish</button>
-            </div>
+                <div class="reader-buttons">
+                    <button @click="readWords(words, true)">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button @click="nextPage()" v-if="status==2 && !page.question && pageNum+1<book.pages.length">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button @click="finish()" v-if="status==2 && !page.question  && pageNum+1==book.pages.length" >
+                        <i class="fas fa-thumbs-up"></i>
+                    </button>
+                </div>
             </div>
             <div key="question" class="reader-question" v-if="status==1 && page.question">
                 <div class="reader-question-title" @click="readQuestion()" >{{ page.question.title}}</div>
@@ -184,6 +188,7 @@ Vue.component('reader', {
             if (!this.book){
                 return
             }
+            document.title=this.book.title;
             var audios = this.words.concat(['correcto','intenta_otra_vez'])
             if (this.page.question){
                 audios = audios.concat(this.page.question.title.split(' '))
@@ -272,6 +277,11 @@ Vue.component('reader', {
 }
 .reader button{
     cursor: pointer;
+}
+.reader-buttons{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .reader-question{
     margin: 24px auto;

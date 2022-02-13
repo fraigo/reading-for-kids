@@ -26,10 +26,11 @@ Vue.component('gallery', {
     },
     mounted:function(){
         console.log("gallery-component mounted");
-        this.loadSounds()
+        this.setup()
     },
     methods: {
-        loadSounds: function(){
+        setup: function(){
+            document.title="Books"
             for(var i in this.items){
                 loadAudios(this.items[i][this.lang].split(" "), this.lang)
             }
@@ -44,7 +45,7 @@ Vue.component('gallery', {
     },
     watch: {
         items: function(items){
-            this.loadSounds()
+            this.setup()
         }
     },
     computed:{

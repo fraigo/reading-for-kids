@@ -127,7 +127,7 @@
             },
             loadContent: function(id){
                 var self = this
-                loadData("data/"+id+".json", function(data){
+                loadData("data/"+this.lang+"/"+id+".json", function(data){
                     self.contentData=JSON.parse(data)
                     self.appData.contentId = id
                     self.saveData()
