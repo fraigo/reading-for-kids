@@ -1,0 +1,237 @@
+{
+  "title": "Litle Red Riding Hood",
+  "lang": "en",
+  "pages": [
+    {
+      "content": "Once upon a time there was a girl who lived in a forest",
+      "image": "img/caperucita/000.png",
+      "question": {
+        "title": "Where did the girl live?",
+        "answer": 2,
+        "options": [
+          {
+            "title": "Beach"
+          },
+          {
+            "title": "City"
+          },
+          {
+            "title": "Forest"
+          }
+        ]
+      }
+    },
+    {
+      "content": "Le llamaban Caperucita Roja",
+      "image": "img/caperucita/000.png",
+      "question": {
+        "title": "De qué color era su capa?",
+        "answer": 1,
+        "options": [
+          {
+            "title": "Azul"
+          },
+          {
+            "title": "Rojo"
+          },
+          {
+            "title": "Verde"
+          }
+        ]
+      }
+    },
+    {
+      "content": "Un día su mamá le dijo qué la abuela estaba enferma",
+      "image": "img/caperucita/001.png"
+    },
+    {
+      "content": "Le mandó llevar pastel, frutas y miel",
+      "image": "img/caperucita/002.png",
+      "question": {
+        "title": "Qué le llevó a su abuela?",
+        "answer": 2,
+        "options": [
+          {
+            "title": "Galletas"
+          },
+          {
+            "title": "Medicina"
+          },
+          {
+            "title": "Pastel"
+          }
+        ]
+      }
+    },
+    {
+      "content": "Su mamá le dijo que tenga cuidado con el lobo",
+      "image": "img/caperucita/001.png",
+      "question": {
+        "title": "Quien vive en el bosque?",
+        "answer": 1,
+        "options": [
+          {
+            "title": "Un león"
+          },
+          {
+            "title": "Un lobo"
+          },
+          {
+            "title": "Un oso"
+          }
+        ]
+      }
+    },
+    {
+      "content": "Caperucita se fue cantando al bosque",
+      "image": "img/caperucita/003.png"
+    },
+    {
+      "content": "Pero se dristrajo jugando con flores",
+      "image": "img/caperucita/004.png"
+    },
+    {
+      "content": "Un lobo apareció y le preguntó donde iba",
+      "image": "img/caperucita/005.png",
+      "question": {
+        "title": "Dónde va caperucita?",
+        "answer": 1,
+        "options": [
+          {
+            "title": "Donde su mamá"
+          },
+          {
+            "title": "Donde su abuela"
+          }
+        ]
+      }
+    },
+    {
+      "content": "Le dijo que iba dondé su abuela",
+      "image": "img/caperucita/005.png"
+    },
+    {
+      "content": "El lobo le dijo que use un atajo para llegar rápido.",
+      "image": "img/caperucita/006.png"
+    },
+    {
+      "content": "Pero el camino era mucho más largo.",
+      "image": "img/caperucita/006.png",
+      "question": {
+        "title": "Qué camino tomó caperucita?",
+        "answer": 0,
+        "options": [
+          {
+            "title": "El camino largo"
+          },
+          {
+            "title": "El camino corto"
+          }
+        ]
+      }
+    },
+    {
+      "content": "Al llegar a la casa de su abuela, golpeó la puerta.",
+      "image": "img/caperucita/007.png",
+      "question": {
+        "title": "Quién estaba en la casa de su abuela?",
+        "answer": 0,
+        "options": [
+          {
+            "title": "El lobo"
+          },
+          {
+            "title": "La abuela"
+          }
+        ]
+      }
+    },
+    {
+      "content": "Adelante, dijo la abuela, con una voz extraña.",
+      "image": "img/caperucita/007.png"
+    },
+    {
+      "content": "Abuelita, abuelita, ¿por qué tienes los ojos tan grandes?",
+      "image": "img/caperucita/008.png"
+    },
+    {
+      "content": "Para verte mejor!",
+      "image": "img/caperucita/008.png"
+    },
+    {
+      "content": "Abuelita, abuelita, ¿por qué tienes la nariz tan grande?",
+      "image": "img/caperucita/009.png"
+    },
+    {
+      "content": "Para olerte mejor!",
+      "image": "img/caperucita/009.png"
+    },
+    {
+      "content": "Abuelita, abuelita, ¿por qué tienes la boca tan grande?",
+      "image": "img/caperucita/010.png"
+    },
+    {
+      "content": "Para comerte mejor!",
+      "image": "img/caperucita/010.png",
+      "question": {
+        "title": "El lobo se comió a caperucita?",
+        "answer": 1,
+        "options": [
+          {
+            "title": "No"
+          },
+          {
+            "title": "Si"
+          }
+        ]
+      }
+    },
+    {
+      "content": "El lobo se comió a caperucita y tomó una siesta",
+      "image": "img/caperucita/011.png",
+      "question": {
+        "title": "Qué tenía en la panza?",
+        "answer": 1,
+        "options": [
+          {
+            "title": "Un Pastel"
+          },
+          {
+            "title": "A caperucita"
+          }
+        ]
+      }
+    },
+    {
+      "content": "Un cazador vio al lobo y lo atrapó",
+      "image": "img/caperucita/011.png"
+    },
+    {
+      "content": "El cazador rescató a caperucita de su panza",
+      "image": "img/caperucita/012.png",
+      "question": {
+        "title": "Quién rescató a caperucita?",
+        "answer": 2,
+        "options": [
+          {
+            "title": "Un policía"
+          },
+          {
+            "title": "Un bombero"
+          },
+          {
+            "title": "Un cazador"
+          }
+        ]
+      }
+    },
+    {
+      "content": "Celebraron comiendo pastel, frutas y miel",
+      "image": "img/caperucita/012.png"
+    },    
+    {
+      "content": "Fin",
+      "image": "img/caperucita/000.png"
+    }
+  ]
+}

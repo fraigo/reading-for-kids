@@ -2,6 +2,7 @@
     "caperucita" : {
         "cover" : "img/caperucita/000.png",
         "es" : "Caperucita Roja",
+        "en" : "Litle Red Riding Hood",
         "background" : "#601000",
         "color" : "#C08000"
     },

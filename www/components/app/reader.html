@@ -3,7 +3,7 @@
     <div class="reader-component" >
      <div class="reader-header">
          <h1></h1>
-         <div @click="nextPage()" >Page {{pageNum+1}}</div>
+         <div @click="nextPage()" >{{language.translate('page')}} {{pageNum+1}}</div>
      </div>
      <transition-group name="fade" tag="div" class="reader-content">
          <div key="left" class="reader-left">
@@ -59,7 +59,8 @@ Vue.component('reader', {
         }
     },
     props: { 
-        book: Object
+        book: Object,
+        language: Object,
     },
     mounted:function(){
         var self = this
@@ -150,7 +151,7 @@ Vue.component('reader', {
             var words = this.page.question.options[idx].title.split(" ")
             console.log('check',idx,this.page.question.answer,words)
             if (idx == this.page.question.answer){
-                words.push('correcto')
+                words.push(language.translate('correct'))
                 this.readWords(words, false, function(){
                     if (self.pageNum==self.book.pages.length-1){
                         self.finish()
@@ -189,7 +190,10 @@ Vue.component('reader', {
                 return
             }
             document.title=this.book.title;
-            var audios = this.words.concat(['correcto','intenta_otra_vez'])
+            var audios = this.words.concat([
+                language.translate('correct'),
+                language.translate('try_again'),
+            ])
             if (this.page.question){
                 audios = audios.concat(this.page.question.title.split(' '))
                 for (var idx in this.page.question.options){

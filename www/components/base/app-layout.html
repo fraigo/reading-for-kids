@@ -2,14 +2,15 @@
 <script type="text/x-template" id="app-layout-template">
     <div class="app-layout" :style="{fontSize:size+'rem'}" ref="layout">
         <div class="app-header">
-            <div>{{contentData?contentData.title:'Reader'}}</div>
+            <div>{{contentData?contentData.title:language.translate('Reader')}}</div>
             <div>
-                <a @click="home()" >Home</a>
+                <a v-if="contentData" @click="home()" ><i class="fas fa-home"></i></a>
+                <a v-if="!contentData" @click="showSetup()" ><i class="fas fa-cog"></i></a>
             </div>
         </div>
         <transition-group name="fade" tag="div" class="app-main">
-            <div v-if="contentData" key="book" is="reader" :book="contentData" @finish="home()"></div>
-            <div v-if="!contentData && books" key="books" is="gallery" :items="books" :lang="lang" @select="loadContent($event)"></div>
+            <div v-if="contentData" key="book" is="reader" :language="language" :book="contentData" @finish="home()"></div>
+            <div v-if="!contentData && books" key="books" :language="language" is="gallery" :items="books" :lang="lang" @select="loadContent($event)"></div>
             <div class="app-message" v-if="message" :key="message?message:''"><div >{{message}}</div></div>
         </transition-group>
         <div is="popup" :info="popup" ref="popup"></div>
@@ -41,6 +42,7 @@
                 contentData: null,
                 books: {},
                 popup: {},
+                setup: false,
                 cacheId: (new Date()).getTime(),
                 actions: {
                     'setLanguage' : true
@@ -104,6 +106,15 @@
                 this.contentData=null
                 this.appData.contentId=null
                 this.saveData()
+            },
+            showSetup: function(){
+                var self=this
+                this.alert(language.translate('Language'),language.translate('Select language'),{
+                    "en":language.en.lang_name,
+                    "es":language.es.lang_name
+                },function(button,idx){
+                    self.setLanguage({value:idx})
+                })
             },
             loadHash: function(){
                 var hash=document.location.hash.replace('#','').split('/')

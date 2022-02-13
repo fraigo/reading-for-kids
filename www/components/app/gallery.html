@@ -32,7 +32,9 @@ Vue.component('gallery', {
         setup: function(){
             document.title="Books"
             for(var i in this.items){
-                loadAudios(this.items[i][this.lang].split(" "), this.lang)
+                if (this.items[i][this.lang]){
+                    loadAudios(this.items[i][this.lang].split(" "), this.lang)
+                }
             }
         },
         select:function(idx){
@@ -45,6 +47,9 @@ Vue.component('gallery', {
     },
     watch: {
         items: function(items){
+            this.setup()
+        },
+        lang: function(lang){
             this.setup()
         }
     },

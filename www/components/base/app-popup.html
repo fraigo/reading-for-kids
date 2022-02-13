@@ -1,12 +1,12 @@
 <!-- text-template -->
 <script type="text/x-template" id="popup-component-template">
     <transition-group tag="div" class="popup-component" v-show="visible">
-        <div class="popup-component-content" :key="visible?1:0" v-if="visible">
+        <div class="popup-component-content  default-style" :key="visible?1:0" v-if="visible">
             <div class="close-popup" @click="hide()"><span class="material-icons">close</span></div>
             <h3 v-if="popup.title">{{popup.title}}</h3>
             <div v-if="popup.message" class="popup-message">{{popup.message}}</div>
             <div class="popup-component-buttons" v-if="popup.buttons">
-                <button @click="popupButton(but)" v-for="but in popup.buttons">{{but}}</button>
+                <button @click.stop="popupButton(but,key)" :key="key" v-for="(but,key) in popup.buttons">{{but}}</button>
             </div>
         </div>
     </transition-group>
@@ -39,9 +39,9 @@ Vue.component('popup', {
             this.visible = false
             this.$forceUpdate()
         },
-        popupButton: function(label) {
+        popupButton: function(label, idx) {
             if (this.popup.callback) {
-                this.popup.callback(label)
+                this.popup.callback(label, idx)
             }
             this.hide()
             this.$emit('button', label)
@@ -93,9 +93,7 @@ Vue.component('popup', {
     cursor: pointer;
 }
 .popup-component-content{
-    background-color: #eee;
     text-align: center;
-    color: #222;
     padding: 16px;
     width: 400px;
     min-height: 160px;
