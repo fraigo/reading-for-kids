@@ -160,7 +160,7 @@ Vue.component('reader', {
                     }
                 })
             } else {
-                words.push('intenta_otra_vez')
+                words.push(language.translate('try_again'))
                 this.readWords(words, false, function(){
                     self.currentWord = -1
                     self.status=0

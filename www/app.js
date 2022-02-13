@@ -85,8 +85,9 @@ var loadAudios=function(audioList,lang){
         var base = document.location.pathname.replace("index.html","")
         audios[audio1]=base+"audio/"+lang+"/"+audio1+".wav";
     }
-    console.log('loading ',audioList.join(','), audios);
-    audioEngine.loadList(audios, function(result) {
+    console.log('loading ',Object.keys(audios).join(','), audios);
+    audioEngine.loadList(audios, function(result, p1) {
+        console.log('loaded ',result, p1)
     }, function(id, error) {
         (console.warn||console.log)('Load error',id,audios[id])
     })
@@ -98,7 +99,7 @@ var playSequence= function (list, itemCallback, endCallback) {
     for(var idx=0; idx< list.length; idx++) {
         var audio1 = audioId(list[idx])
         var duration1 = audioEngine.duration(audio1);
-        console.log('play', audio1)
+        console.log('play', audio1, duration1)
         var proc=setTimeout(function(idx,audio,duration){ 
             if (itemCallback) {
                 itemCallback(idx,audio,duration)
