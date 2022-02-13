@@ -13,7 +13,7 @@
             <div class="reader-text" key="pageNum">
                 <span v-for="(word,wordIdx) in words" :key="wordIdx" @click="showWord(wordIdx)" :active="wordIdx<=currentWord" :next="wordIdx==currentWord+1">{{word}} </span>
                 <div class="reader-buttons">
-                    <button @click="readWords(words, true)">
+                    <button v-if="audioLoaded" @click="readWords(words, true)">
                         <i class="fas fa-play"></i>
                     </button>
                     <button @click="nextPage()" v-if="status==2 && !page.question && pageNum+1<book.pages.length">
@@ -55,6 +55,7 @@ Vue.component('reader', {
             visibleAnswer: -1,
             playProc: null,
             readOptionTimeout: [],
+            audioLoaded: false,
             popup: null
         }
     },
@@ -189,6 +190,7 @@ Vue.component('reader', {
             if (!this.book){
                 return
             }
+            var self = this
             document.title=this.book.title;
             var audios = this.words.concat([
                 language.translate('correct'),
@@ -201,7 +203,10 @@ Vue.component('reader', {
                     audios = audios.concat(answer.title.split(' '))
                 }
             }
-            loadAudios(audios,this.book.lang)
+            self.audioLoaded = false;
+            loadAudios(audios,this.book.lang, function(){
+                self.audioLoaded=true
+            })
         },
         readWords: function (list, showWord, callback) {
             var self = this

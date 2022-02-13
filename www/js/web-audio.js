@@ -11,18 +11,20 @@ function WebAudio() {
 
 }
 
-WebAudio.prototype.loadList = function (items, successCallback, errorCallback) {
+WebAudio.prototype.loadList = function (items, successCallback, errorCallback, endCallback) {
     var itemsToLoad = items.length ? items.length : Object.keys(items).length;
-    var items = JSON.parse(JSON.stringify(items))
+    //var items = JSON.parse(JSON.stringify(items))
     var itemsLoaded = 0;
     var errors = [];
     var loaded = [];
     var self = this;
-    if (Object.keys(items).length == 0){
+    var keys = Object.keys(items);
+    if (keys.length == 0){
+        if (WEBAUDIO_DEBUG) console.log('end loading');
         return
     }
-    var audioid = Object.keys(items)[0];
-    if (WEBAUDIO_DEBUG) console.log('loading', audioid, items[audioid]);
+    var audioid = keys[0];
+    if (WEBAUDIO_DEBUG) console.log('loading', audioid, keys.length);
     this.load(items[audioid],audioid,
         function(audio,id){
             itemsLoaded++;
@@ -30,12 +32,18 @@ WebAudio.prototype.loadList = function (items, successCallback, errorCallback) {
             if (WEBAUDIO_DEBUG) console.log('loaded',id, itemsToLoad)
             successCallback(id,audio);
             delete items[audioid]
-            self.loadList(items, successCallback, errorCallback)
+            if (Object.keys(items).length==0){
+                endCallback();
+            }
+            self.loadList(items, successCallback, errorCallback, endCallback)
         },function(error,id){
             if (WEBAUDIO_DEBUG) console.log('error',id,itemsToLoad)
             errorCallback(id,error);
             delete items[audioid]
-            self.loadList(items, successCallback, errorCallback)
+            if (Object.keys(items).length==0){
+                endCallback();
+            }
+            self.loadList(items, successCallback, errorCallback, endCallback)
         }
     )
 }

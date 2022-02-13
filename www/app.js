@@ -78,7 +78,7 @@ var stopSounds= function(){
     }
 }
 
-var loadAudios=function(audioList,lang){
+var loadAudios=function(audioList,lang,callback){
     var audios={};
     for(var idx=0; idx< audioList.length; idx++) {
         var audio1 = audioId(audioList[idx])
@@ -90,6 +90,10 @@ var loadAudios=function(audioList,lang){
         console.log('loaded ',result, p1)
     }, function(id, error) {
         (console.warn||console.log)('Load error',id,audios[id])
+    }, function(){
+        if (callback) {
+            callback();
+        }
     })
 }
 
