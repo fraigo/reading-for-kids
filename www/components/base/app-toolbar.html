@@ -1,0 +1,42 @@
+<!-- text-template -->
+<script type="text/x-template" id="app-toolbar-component-template">
+    <div class="app-toolbar-component">
+        <div class="toolbar-title"><img src="./img/icon.png" height="24">{{title}}</div>
+        <div class="toolbar-buttons">
+            <slot></slot>
+        </div>
+    </div>
+</script>
+<script type="text/javascript">
+Vue.component('app-toolbar', {
+    template: '#app-toolbar-component-template',
+    data: function(){
+        return {
+            zoom : 1
+        }
+    },
+    props: {
+        title: String
+    },
+    mounted:function(){
+        console.log("app-toolbar-component mounted");
+        var self = this;
+    },
+    methods: {
+    },
+    computed:{
+    }
+});
+</script>
+<style>
+.app-toolbar-component {
+    line-height: 1.4em;
+}
+.app-toolbar-component .toolbar-title img{
+    height: 1.4em;
+    vertical-align: middle;
+    padding-right: 6px;
+}
+
+</style>
+    

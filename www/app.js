@@ -1,6 +1,7 @@
 var components=[
     "base/app-layout",
     "base/app-popup",
+    "base/app-toolbar",
     "app/reader",
     "app/gallery",
 ]
