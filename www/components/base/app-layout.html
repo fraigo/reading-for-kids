@@ -73,7 +73,7 @@
             window.addEventListener("keyup",function(ev){
                 console.log('ev',ev.keyCode)
                 if (ev.keyCode == 27) {
-                    self.popup = {}
+                    self.popup = null
                 }
             })
             window.addEventListener("resize",function(ev){
@@ -161,11 +161,12 @@
                 this.$forceUpdate()
             },
             alert: function(title,message,buttons,callback) {
-                this.popup.title = title
-                this.popup.message = message
-                this.popup.user = null
-                this.popup.callback = callback
-                this.popup.buttons = buttons ? buttons : ["Ok"]
+                this.popup={
+                    title: title,
+                    message: message,
+                    callback: callback,
+                    buttons: buttons
+                }
                 this.$refs.popup.show(this.popup)
                 this.$forceUpdate()
             },

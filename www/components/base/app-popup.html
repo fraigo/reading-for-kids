@@ -26,6 +26,9 @@ Vue.component('popup', {
     mounted:function(){
         console.log("popup-component mounted");
         var self = this;
+        if (!self.info){
+            self.hide()
+        }
     },
     methods: {
         show: function(data) {
@@ -57,7 +60,7 @@ Vue.component('popup', {
     watch:{
         info: function(newData) {
             this.popup = newData;
-            if (this.popup.hidden) {
+            if (!this.popup || this.popup.hidden) {
                 this.hide()
             } else {
                 this.show(newData)
