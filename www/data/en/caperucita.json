@@ -22,43 +22,43 @@
       }
     },
     {
-      "content": "Le llamaban Caperucita Roja",
+      "content": "They called her Little Red Riding Hood",
       "image": "img/caperucita/000.png",
       "question": {
-        "title": "De qué color era su capa?",
+        "title": "What color was her cape?",
         "answer": 1,
         "options": [
           {
-            "title": "Azul"
+            "title": "Blue"
           },
           {
-            "title": "Rojo"
+            "title": "Red"
           },
           {
-            "title": "Verde"
+            "title": "Green"
           }
         ]
       }
     },
     {
-      "content": "Un día su mamá le dijo qué la abuela estaba enferma",
+      "content": "One day her mother told her that her grandmother was sick",
       "image": "img/caperucita/001.png"
     },
     {
-      "content": "Le mandó llevar pastel, frutas y miel",
+      "content": "She ordered her to bring cake, fruit and honey",
       "image": "img/caperucita/002.png",
       "question": {
-        "title": "Qué le llevó a su abuela?",
+        "title": "What did she take to her grandmother?",
         "answer": 2,
         "options": [
           {
-            "title": "Galletas"
+            "title": "Cookies"
           },
           {
-            "title": "Medicina"
+            "title": "Medicine"
           },
           {
-            "title": "Pastel"
+            "title": "Cake"
           }
         ]
       }
