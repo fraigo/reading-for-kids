@@ -64,50 +64,50 @@
       }
     },
     {
-      "content": "Su mamá le dijo que tenga cuidado con el lobo",
+      "content": "Her mom told her to watch out for the wolf",
       "image": "img/caperucita/001.png",
       "question": {
-        "title": "Quien vive en el bosque?",
+        "title": "Who líves in the forest?",
         "answer": 1,
         "options": [
           {
-            "title": "Un león"
+            "title": "A lion"
           },
           {
-            "title": "Un lobo"
+            "title": "a wolf"
           },
           {
-            "title": "Un oso"
+            "title": "a bear"
           }
         ]
       }
     },
     {
-      "content": "Caperucita se fue cantando al bosque",
+      "content": "Little Red Riding Hood went singing to the forest",
       "image": "img/caperucita/003.png"
     },
     {
-      "content": "Pero se dristrajo jugando con flores",
+      "content": "But she got distracted playing with flowers",
       "image": "img/caperucita/004.png"
     },
     {
-      "content": "Un lobo apareció y le preguntó donde iba",
+      "content": "A wolf appeared and asked her where she was going",
       "image": "img/caperucita/005.png",
       "question": {
-        "title": "Dónde va caperucita?",
+        "title": "Where is she going?",
         "answer": 1,
         "options": [
           {
-            "title": "Donde su mamá"
+            "title": "Where her mother"
           },
           {
-            "title": "Donde su abuela"
+            "title": "Where her grandmother"
           }
         ]
       }
     },
     {
-      "content": "Le dijo que iba dondé su abuela",
+      "content": "She told him he was going to his grandmother",
       "image": "img/caperucita/005.png"
     },
     {
@@ -230,7 +230,7 @@
       "image": "img/caperucita/012.png"
     },    
     {
-      "content": "Fin",
+      "content": "End",
       "image": "img/caperucita/000.png"
     }
   ]
