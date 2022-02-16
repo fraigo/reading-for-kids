@@ -203,30 +203,30 @@
       }
     },
     {
-      "content": "Un cazador vio al lobo y lo atrapó",
+      "content": "A hunter saw the wolf and caught him",
       "image": "img/caperucita/011.png"
     },
     {
-      "content": "El cazador rescató a caperucita de su panza",
+      "content": "The hunter rescued Little Red Riding Hood from his belly",
       "image": "img/caperucita/012.png",
       "question": {
-        "title": "Quién rescató a caperucita?",
+        "title": "Who rescued Little Red Riding Hood?",
         "answer": 2,
         "options": [
           {
-            "title": "Un policía"
+            "title": "A policeman"
           },
           {
-            "title": "Un bombero"
+            "title": "a fireman"
           },
           {
-            "title": "Un cazador"
+            "title": "a hunter"
           }
         ]
       }
     },
     {
-      "content": "Celebraron comiendo pastel, frutas y miel",
+      "content": "They celebrated eating cake, fruits and honey",
       "image": "img/caperucita/012.png"
     },    
     {
