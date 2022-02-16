@@ -155,49 +155,49 @@
       "image": "img/caperucita/008.png"
     },
     {
-      "content": "Para verte mejor!",
+      "content": "To see you better!",
       "image": "img/caperucita/008.png"
     },
     {
-      "content": "Abuelita, abuelita, ¿por qué tienes la nariz tan grande?",
+      "content": "Grandma, grandma, why is your nose so big?",
       "image": "img/caperucita/009.png"
     },
     {
-      "content": "Para olerte mejor!",
+      "content": "To smell you better!",
       "image": "img/caperucita/009.png"
     },
     {
-      "content": "Abuelita, abuelita, ¿por qué tienes la boca tan grande?",
+      "content": "Grandma, grandma, why is your mouth so big?",
       "image": "img/caperucita/010.png"
     },
     {
-      "content": "Para comerte mejor!",
+      "content": "To eat you better!",
       "image": "img/caperucita/010.png",
       "question": {
-        "title": "El lobo se comió a caperucita?",
-        "answer": 1,
+        "title": "Did the wolf eat her?",
+        "answer": 0,
         "options": [
           {
-            "title": "No"
+            "title": "Yes"
           },
           {
-            "title": "Si"
+            "title": "No"
           }
         ]
       }
     },
     {
-      "content": "El lobo se comió a caperucita y tomó una siesta",
+      "content": "The wolf ate Little Red Riding Hood and took a nap",
       "image": "img/caperucita/011.png",
       "question": {
-        "title": "Qué tenía en la panza?",
+        "title": "What was in his belly?",
         "answer": 1,
         "options": [
           {
-            "title": "Un Pastel"
+            "title": "A Cake"
           },
           {
-            "title": "A caperucita"
+            "title": "A Girl"
           }
         ]
       }
