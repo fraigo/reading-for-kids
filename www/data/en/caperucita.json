@@ -111,47 +111,47 @@
       "image": "img/caperucita/005.png"
     },
     {
-      "content": "El lobo le dijo que use un atajo para llegar rápido.",
+      "content": "The wolf told her to use a shortcut to get there fast.",
       "image": "img/caperucita/006.png"
     },
     {
-      "content": "Pero el camino era mucho más largo.",
+      "content": "But the road was much longer.",
       "image": "img/caperucita/006.png",
       "question": {
-        "title": "Qué camino tomó caperucita?",
+        "title": "Which way did Little Red Riding Hood go?",
         "answer": 0,
         "options": [
           {
-            "title": "El camino largo"
+            "title": "The long way"
           },
           {
-            "title": "El camino corto"
+            "title": "The short way"
           }
         ]
       }
     },
     {
-      "content": "Al llegar a la casa de su abuela, golpeó la puerta.",
+      "content": "Upon reaching her grandmother's house, she knocked on the door.",
       "image": "img/caperucita/007.png",
       "question": {
-        "title": "Quién estaba en la casa de su abuela?",
+        "title": "Who was at grandmother's house?",
         "answer": 0,
         "options": [
           {
-            "title": "El lobo"
+            "title": "The wolf"
           },
           {
-            "title": "La abuela"
+            "title": "Grandmother"
           }
         ]
       }
     },
     {
-      "content": "Adelante, dijo la abuela, con una voz extraña.",
+      "content": "Go ahead, grandma said, in a strange voice.",
       "image": "img/caperucita/007.png"
     },
     {
-      "content": "Abuelita, abuelita, ¿por qué tienes los ojos tan grandes?",
+      "content": "Grandma, grandma, why do you have such big eyes?",
       "image": "img/caperucita/008.png"
     },
     {
