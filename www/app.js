@@ -67,7 +67,7 @@ var playAudio= function(word, callback) {
         var time=audioEngine.duration(audio1)
         var proc=setTimeout(function(){
             callback()
-        }, time)
+        }, time+50)
         audioProcs.push(proc)
     }
 }
@@ -83,7 +83,7 @@ var loadAudios=function(audioList,lang,callback){
     var audios={};
     for(var idx=0; idx< audioList.length; idx++) {
         var audio1 = audioId(audioList[idx])
-        var base = document.location.pathname.replace("index.html","")
+        var base = ""
         audios[audio1]=base+"audio/"+lang+"/"+audio1+".wav";
     }
     console.log('loading ',Object.keys(audios).join(','), audios);
@@ -100,15 +100,18 @@ var loadAudios=function(audioList,lang,callback){
 
 var playSequence= function (list, itemCallback, endCallback) {
     var time = 50
+    console.log('Play sequence', list)
     stopSounds()
     for(var idx=0; idx< list.length; idx++) {
         var audio1 = audioId(list[idx])
-        var duration1 = audioEngine.duration(audio1);
+        var duration1 = audioEngine.duration(audio1)+0.3;
         console.log('play', audio1, duration1)
         var proc=setTimeout(function(idx,audio,duration){ 
             if (itemCallback) {
+                console.log('callback', audio, duration)
                 itemCallback(idx,audio,duration)
             } else {
+                console.log('playing', audio, duration)
                 playAudio(audio)
             }
         },time,idx,audio1,duration1)

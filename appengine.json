@@ -1,0 +1,9 @@
+{
+ "path" : "www",
+ "name" : "Reading4Kids",
+ "id" : "io.fraigo.reading",
+ "icon" : "www/img/icon.png",
+ "bgcolor" : "#FFFFFF", 
+ "version" : "1.0.0", 
+ "local" : true
+}

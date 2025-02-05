@@ -1,6 +1,7 @@
 if [ "$1" == "" ]; then
   echo "Usage: $0 lang expr folder"
   echo "Example: $0 lang hello /tmp"
+  exit 1
 fi
 VOICE=Samantha
 LANG=$1

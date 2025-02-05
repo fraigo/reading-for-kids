@@ -7,6 +7,7 @@ var language = {
         "reader": "Lectura",
         "language": "Idioma",
         "select_language": "Seleccionar Idioma",
+        "try_again": "Try again",
     },
     "en" : {
         "lang" : "en",
@@ -16,6 +17,7 @@ var language = {
         "reader": "Reader",
         "language": "Language",
         "select_language": "Select Language",
+        "try_again": "Intenta otra vez",
     },
     "selected" : "en"
 }

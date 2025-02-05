@@ -25,12 +25,17 @@
                 </div>
             </div>
             <div key="question" class="reader-question" v-if="status==1 && page.question">
-                <div class="reader-question-title" @click="readQuestion()" >{{ page.question.title}}</div>
+                <div class="reader-question-title" @click="readQuestion()" >
+                    <img style="float:left" src="img/audio.svg" height="32" align="absmiddle">
+                    <div>
+                    <span v-for="(word,idx2) in inWords(page.question.title)" :key="idx2">{{ word }} </span>
+                    </div>
+                </div>
                 <div class="reader-question-answers">
                     <div class="reader-question-answer" @click="currentAnswer=answerIdx" :current="answerIdx==currentAnswer" v-for="(answer,answerIdx) in page.question.options" 
                         :display="answerIdx<=visibleAnswer" :va="visibleAnswer" :idx="answerIdx" :key="answerIdx">
+                        <img src="img/audio.svg" height="32" @click.stop="listenOption(answerIdx,answer)" align="absmiddle">
                         <button @click="checkAnswer(answerIdx)" >{{ answer.title }}</button>
-                        <img src="img/audio.svg" height="32" @click="listenOption(answerIdx,answer)" align="absmiddle">
                     </div>
                 </div>
             </div>
@@ -222,6 +227,12 @@ Vue.component('reader', {
                     callback()
                 }
             })
+        },
+        inWords: function(sentence) {
+            if (!sentence) {
+                return []
+            }
+            return sentence.split(" ")
         }
     },
     computed:{
